@@ -10,11 +10,11 @@ contract CrypTeaProxy is Proxy {
 
     /// @notice Storage position of the address of the current implementation
     bytes32 private constant implementationPosition =
-        keccak256("CrypTea.proxy.implementation.address");
+        bytes32(uint256(keccak256("CrypTea.proxy.implementation.address")) - 1);
 
     /// @notice Storage position of the owner of the contract
     bytes32 private constant proxyOwnerPosition =
-        keccak256("CrypTea.proxy.owner");
+        bytes32(uint256(keccak256("CrypTea.proxy.owner")) - 1);
 
     /// -----------------------------------------------------------------------
     /// Modifiers

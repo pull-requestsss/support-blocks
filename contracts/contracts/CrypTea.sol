@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./ICrypTea.sol";
 
-contract CrypTea is ICrypTea, Initializable, OwnableUpgradeable {
+contract CrypTea is ICrypTea, OwnableUpgradeable {
     /// -----------------------------------------------------------------------
     /// LIBRARY USAGE
     /// -----------------------------------------------------------------------
@@ -32,7 +32,9 @@ contract CrypTea is ICrypTea, Initializable, OwnableUpgradeable {
     /* ===== INIT ===== */
 
     /// @dev Initialize
-    function initialize() public initializer {}
+    function initialize() public initializer {
+        __Ownable_init();
+    }
 
     /// -----------------------------------------------------------------------
     /// OWNER FUNCTIONS
