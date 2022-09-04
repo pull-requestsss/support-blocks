@@ -1,29 +1,26 @@
-const express = require('express')
-const morgan = require('morgan')
-require('dotenv').config()
+const express = require("express");
+const morgan = require("morgan");
+require("dotenv").config();
 
-const connectDb = require('./db/connection')
+const { User } = require("./models/userModel");
 
-const app = express()
-connectDb()
+const connectDb = require("./db/connection");
 
-const PORT = process.env.APP_PORT || 8080
-const APP_ENV = process.env.APP_ENV || "production"
+const app = express();
 
+const PORT = process.env.APP_PORT || 8080;
+const APP_ENV = process.env.APP_ENV || "production";
 
-if (APP_ENV == "dev") {
-    app.use(morgan('dev'))
-}
-else {
-    app.use(morgan('combined'))
-}
+app.use(express.json());
 
-app.use(express.json())
+APP_ENV == "dev" ? app.use(morgan("dev")) : app.use(morgan("combined"));
 
-
-app.listen(PORT, () => {
+connectDb().then(() => {
+  app.listen(PORT, () => {
     console.log(`server is up and listening.
-     PORT : ${PORT} 
-     APP_ENV : ${APP_ENV} 
-    `)
-})
+             PORT : ${PORT} 
+             APP_ENV : ${APP_ENV} 
+            `);
+  });
+});
+
