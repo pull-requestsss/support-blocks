@@ -1,18 +1,20 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 const { expectRevert } = require("@openzeppelin/test-helpers")
-const { initialize, deployFTs, accounts, fts, _crypTea, _crypTeaProxy } = require("./common");
+const { initialize, deployFTs, accounts, fts, _crypTea, _crypTeaProxy, getProxiedCrypTea, _crypTeaProxied } = require("./common");
 
 
 describe("Proxy contract", async () => {
 
     let USER1; let USER2; let USER3;
     let ft1; let ft2; let ft3; let ETH;
-    let crypTeaProxy; let crypTea;
+    let crypTeaProxy; let crypTea; let crypTeaProxied;
 
     const init = async () => {
         await initialize();
         await deployFTs();
+
+        await getProxiedCrypTea();
 
         const _accounts = accounts();
         USER1 = _accounts[0];
@@ -24,6 +26,7 @@ describe("Proxy contract", async () => {
 
         crypTea = _crypTea();
         crypTeaProxy = _crypTeaProxy();
+        crypTeaProxied = _crypTeaProxied();
     }
 
     before(async () => {
@@ -64,12 +67,9 @@ describe("Proxy contract", async () => {
 
     describe('Delegate function', () => {
         it("should run initialize once", async () => {
-            const abi = ["function initialize() public"];
-            const proxied = new ethers.Contract(crypTeaProxy.address, abi, USER1);
-
-            await proxied.initialize();
+            await crypTeaProxied.initialize();
             return await expectRevert(
-                proxied.initialize(),
+                crypTeaProxied.initialize(),
                 "Initializable: contract is already initialized"
             );
         })

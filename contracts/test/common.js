@@ -4,6 +4,7 @@ let crypTeaProxy;
 let crypTea;
 let accounts;
 let ft1; let ft2; let ft3;
+let crypTeaProxied;
 
 const ETH = "0x0000000000000000000000000000000000000000";
 
@@ -17,6 +18,20 @@ const deploy = async () => {
 
     crypTea = await CrypTea.deploy();
     crypTea = await crypTea.deployed();
+}
+
+const getProxiedCrypTea = async () => {
+    const abi = ["function initialize() public",
+        "function whitelist(bytes32 root) external",
+        "function setProtocolFee(uint256 _protocolFees) external",
+        "function setTreasury(address _treasury) external",
+        "function donate(address token,uint256 amount,address to,bytes32[] proof) external payable",
+        "function owner() public view returns (address)",
+        "function treasury() public view returns (address)",
+        "function protocolFees() public view returns (uint256)",
+        "function whitelistRoot() public view returns (bytes32)"
+    ];
+    crypTeaProxied = new ethers.Contract(crypTeaProxy.address, abi, accounts[0]);
 }
 
 const deployMockFTs = async () => {
@@ -45,8 +60,10 @@ module.exports = {
     deployFTs: deployMockFTs,
     mintFT: mintFT,
     approveFT: approveFT,
+    getProxiedCrypTea: getProxiedCrypTea,
     accounts: () => accounts,
     fts: () => [ETH, ft1, ft2, ft3],
     _crypTeaProxy: () => crypTeaProxy,
-    _crypTea: () => crypTea
+    _crypTea: () => crypTea,
+    _crypTeaProxied: () => crypTeaProxied
 }
