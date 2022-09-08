@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models/userModel");
 require("dotenv").config();
 
-const loginSignupController = async (req, res, _next) => {
+
+const loginSignupController = async (req, res) => {
   const { message, createdAt, owner, signature } = req.body;
   if (
     message == undefined ||
@@ -11,10 +12,12 @@ const loginSignupController = async (req, res, _next) => {
     owner == undefined ||
     signature == undefined
   ) {
+
     res
       .status(400)
       .send({ error: "message/createdAt/owner fields missng" });
       return;
+
   }
 
   const isValid = await validateSignature(signature, {

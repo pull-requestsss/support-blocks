@@ -8,6 +8,7 @@ const { validateSignature } = require("./helpers/auth");
 const { verifyRoutes } = require("./routes/verifyRoutes");
 const { authMiddleware } = require("./middlewares/authMiddlware");
 
+
 const app = express();
 
 const PORT = process.env.APP_PORT || 8080;
@@ -21,6 +22,8 @@ app.use(authMiddleware);
 
 
 app.use("/api/verify", verifyRoutes);
+
+app.use("/verify", verifyRoutes);
 
 connectDb().then(() => {
   app.listen(PORT, () => {
