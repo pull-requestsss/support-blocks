@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "yarn prettier && npx hardhat compile && npx hardhat test",
+    "coverage": "npx hardhat coverage && cat coverage/lcov.info | coveralls",
+    "coverage-rate": "npx hardhat coverage && cat coverage/lcov.info | coveralls",
+    "compile": "npx hardhat compile",
+    "deploy": "hardhat deploy",
+    "size": "yarn run hardhat size-contracts --no-compile",
+    "remix": "remixd -s ./ --remix-ide https://remix.ethereum.org"
   },
   "keywords": [],
   "author": "",
@@ -51,5 +57,9 @@
     "ts-node": "^10.8.0",
     "typechain": "^8.0.0",
     "typescript": "^4.7.2"
+  },
+  "dependencies": {
+    "@remix-project/remixd": "^0.6.6",
+    "merkletreejs": "^0.2.32"
   }
 }
