@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 const { solidityKeccak256, isAddress } = require("ethers/lib/utils");
 
-
-// schema for creators 
+// schema for creators
 const UserSchema = mongoose.Schema(
   {
     walletAddress: {
       type: String,
       index: true,
-      required: [true, "Wallet Address is required to make a user account."],
+      required: [true, "Wallet Address is required to make an user account."],
       unique: true,
       validate: {
         validator: function () {
@@ -22,8 +21,8 @@ const UserSchema = mongoose.Schema(
       index: true,
       required: true,
       unique: true,
-      default: () => {
-        return solidityKeccak256(["address"], [this.walletAddress]);
+      default: function () {
+        return solidityKeccak256(["address"], [this.walletAddress]).slice(2, 8);
       },
     },
     token: {
