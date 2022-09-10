@@ -1,81 +1,62 @@
 import React from "react";
+import "./Team.css";
 
 const Team = () => {
   return (
-    <section id="team" class="ud-team">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="ud-section-title mx-auto text-center">
-              <span>Our Team</span>
-              <h2>Meet The Team</h2>
-              <p>
-                There are many variations of passages of Lorem Ipsum available
-                but the majority have suffered alteration in some form.
-              </p>
+    <section id="blog" className="blog-area pt-115">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-lg-4">
+            <div
+              className="section-title text-center pb-20 wow fadeInUp"
+              data-wow-duration="1s"
+              data-wow-delay="0.3s"
+            >
+              <h4 className="title">
+                Our <span>Team</span>
+              </h4>
             </div>
           </div>
         </div>
-
-        <div class="row ">
-          <div class="col-sm-6">
-            <div class="ud-single-team wow fadeInUp" data-wow-delay=".2s">
-              <div class="ud-team-image-wrapper">
-                <div class="ud-team-image">
-                  <img src="assets/images/team/team-03.png" alt="team" />
+        <div className="row justify-content-center">
+          <div className="col-lg-4 col-md-6 col-sm-8">
+            <div
+              className="single-blog mt-30 wow fadeInUpBig"
+              data-wow-duration="1s"
+              data-wow-delay="0.7s"
+            >
+              <div className="blog-image">
+                <a href="blog-details.html">
+                  <img src="assets/images/news-2.jpg" alt="news" />
+                </a>
+              </div>
+              <div className="blog-content">
+                <div className="blog-author d-flex align-items-center">
+                  <div className="author-content media-body">
+                    <p className="text">Elon Musk</p>
+                  </div>
                 </div>
               </div>
-              <div class="ud-team-info">
-                <h5>Andrieo Gloree</h5>
-                <h6>App Developer</h6>
-              </div>
-              <ul class="ud-team-socials">
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-facebook-filled"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-twitter-filled"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-instagram-filled"></i>
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
-          <div class="col-sm-6">
-            <div class="ud-single-team wow fadeInUp" data-wow-delay=".25s">
-              <div class="ud-team-image-wrapper">
-                <div class="ud-team-image">
-                  <img src="assets/images/team/team-04.png" alt="team" />
+          <div className="col-lg-4 col-md-6 col-sm-8">
+            <div
+              className="single-blog mt-30 wow fadeInUpBig"
+              data-wow-duration="1s"
+              data-wow-delay="0.7s"
+            >
+              <div className="blog-image">
+                <a href="blog-details.html">
+                  <img src="assets/images/news-2.jpg" alt="news" />
+                </a>
+              </div>
+              <div className="blog-content">
+                <div className="blog-author d-flex align-items-center">
+                  <div className="author-content media-body">
+                    <p className="text">Elon Musk</p>
+                  </div>
                 </div>
               </div>
-              <div class="ud-team-info">
-                <h5>Jackie Sanders</h5>
-                <h6>Content Writer</h6>
-              </div>
-              <ul class="ud-team-socials">
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-facebook-filled"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-twitter-filled"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://twitter.com/MusharofChy">
-                    <i class="lni lni-instagram-filled"></i>
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
         </div>

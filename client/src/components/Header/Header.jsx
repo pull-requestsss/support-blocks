@@ -1,25 +1,72 @@
 import React from "react";
 import "./Header.css";
-import logo from "../../images/teaLogo.png";
+import Img from "../../assets/Hot-beverage.gif";
 
 const Header = () => {
   return (
-    <header class="ud-header">
-      <div class="container">
-        <div class="row header-flex2">
-          <div class="col-lg-10 header-wrapper">
-            <nav class="navbar navbar-expand-lg header-flex1">
-              <a class="navbar-brand" href="index.html">
-                <img src={logo} alt="Logo" className="header-logo"/>
-                <span className="header-text">Buy Me a CrypTea</span>
-              </a>
-
-              <div class="navbar-btn d-none d-sm-inline-block">
-                <a class="ud-main-btn ud-white-btn" href="javascript:void(0)">
-                  Sign Up
-                </a>
+    <header className="header-area">
+      <div
+        id="home"
+        className="header-hero bg_cover d-lg-flex align-items-center"
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-7">
+              <div className="header-hero-content">
+                <h1
+                  className="hero-title wow fadeInUp"
+                  data-wow-duration="1s"
+                  data-wow-delay="0.2s"
+                >
+                  <span>Supporting</span> your <b>creative ideas</b> was never
+                  this easy.
+                </h1>
+                <p
+                  className="text wow fadeInUp"
+                  data-wow-duration="1s"
+                  data-wow-delay="0.5s"
+                  style={{ textAlign: "center" }}
+                >
+                  Fueled by{" "}
+                  <span
+                    style={{
+                      color: "#f14836",
+                      fontWeight: "bold",
+                      fontSize: "1.5rem",
+                    }}
+                  >
+                    Ethereum
+                  </span>
+                  <img
+                    src="https://cryptologos.cc/logos/versions/ethereum-eth-logo-animated.gif?v=023"
+                    alt="ETH"
+                    style={{
+                      width: "6rem",
+                      borderRadius: "50%",
+                      marginLeft: "1rem",
+                    }}
+                  />
+                </p>
+                <div
+                  className="header-singup wow fadeInUp"
+                  data-wow-duration="1s"
+                  data-wow-delay="0.8s"
+                >
+                  <span>buymeacryptea.club/</span>
+                  <input type="text" placeholder="username" />
+                  <button className="main-btn">Sign Up</button>
+                </div>
               </div>
-            </nav>
+            </div>
+          </div>
+        </div>
+        <div
+          className="header-hero-image d-flex align-items-center wow fadeInRightBig"
+          data-wow-duration="1s"
+          data-wow-delay="1.1s"
+        >
+          <div className="image">
+            <img src={Img} alt="Hero Image" />
           </div>
         </div>
       </div>
