@@ -2,6 +2,7 @@ import React from "react";
 import "./Header.css";
 import Img from "../../assets/Hot-beverage.gif";
 import logo from "../../assets/logo.png";
+import { connectWallet } from "../../api/web3";
 
 const Header = () => {
   return (
@@ -64,7 +65,9 @@ const Header = () => {
                 </div>
 
                 <div className="navbar-btn d-none d-sm-inline-block">
-                  <button className="main-btn">Connect Wallet</button>
+                  <button className="main-btn" onClick={connectWallet}>
+                    Connect Wallet
+                  </button>
                 </div>
               </nav>
             </div>
