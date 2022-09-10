@@ -10,7 +10,7 @@ const TobBar = () => {
           <div className="col-lg-12">
             <nav className="navbar navbar-expand-lg">
               <a className="navbar-brand" href="index.html">
-                <img src={logo} alt="Logo" style={{ width: "5.5rem" }} />
+                <img src={logo} alt="Logo" style={{ width: "4rem" }} />
                 <span
                   style={{
                     fontWeight: "400",
