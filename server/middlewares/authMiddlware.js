@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const authMiddleware = async (req, res, next) => {
   const ignoredRoutes = ["/api/verify"];
 
@@ -8,18 +11,17 @@ const authMiddleware = async (req, res, next) => {
 
   const accessToken = req.headers["authorization"];
   if (!accessToken) {
-    res
+    return res
       .status(400)
       .send({ error: "please include accesstoken in Authorization header" });
-    return;
   }
   try {
-    const decodedJwt = await jwt.verify(accessToken, process.ENV.JWT_SECRET);
-    req.local.walletAddress = decodedJwt.wallet;
+    const decodedJwt = jwt.verify(accessToken, process.env.JWT_SECRET);
+    res.locals.walletAddress = decodedJwt.wallet;
     next();
   } catch (err) {
-    res.status(401).send({ error: "could not validate accesstoken" });
-    return;
+    console.log(err);
+    return res.status(401).send({ error: "could not validate accesstoken" });
   }
 };
 
