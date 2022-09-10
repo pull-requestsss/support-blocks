@@ -2,9 +2,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const authMiddleware = async (req, res, next) => {
-  const ignoredRoutes = ["/api/verify"];
-
-  if (ignoredRoutes.includes(req.path)) {
+  const POSTignoredRoutes = ["/api/verify"];
+  const GETignoredRoutes = ["/api/users"]
+  if (req.method == "GET" && GETignoredRoutes.includes(req.path)) {
+    next();
+    return;
+  }
+  if(req.method == "POST"  && POSTignoredRoutes.includes(req.path)){
     next();
     return;
   }
