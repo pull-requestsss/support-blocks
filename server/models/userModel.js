@@ -19,13 +19,22 @@ const UserSchema = mongoose.Schema(
     slug: {
       type: String,
       index: true,
-      required: true,
       unique: true,
-      default: function () {
-        return solidityKeccak256(["address"], [this.walletAddress]).slice(2, 8);
-      },
+      sparse: true,
     },
-    token: {
+    username: {
+      type: String,
+      required: false,
+    },
+    intro: {
+      type: String,
+      required: false,
+    },
+    industry: {
+      type: String,
+      required: false,
+    },
+    featuredUrl: {
       type: String,
       required: false,
     },

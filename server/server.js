@@ -2,12 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 require("dotenv").config();
 
-const { User } = require("./models/userModel");
 const connectDb = require("./db/connection");
-const { validateSignature } = require("./helpers/auth");
 const { verifyRoutes } = require("./routes/verifyRoutes");
+const { userRoutes } = require("./routes/usersRoutes");
 const { authMiddleware } = require("./middlewares/authMiddlware");
-
 
 const app = express();
 
@@ -19,11 +17,8 @@ APP_ENV == "dev" ? app.use(morgan("dev")) : app.use(morgan("combined"));
 app.use(express.json());
 app.use(authMiddleware);
 
-
-
 app.use("/api/verify", verifyRoutes);
-
-app.use("/verify", verifyRoutes);
+app.use("/api/users", userRoutes);
 
 connectDb().then(() => {
   app.listen(PORT, () => {

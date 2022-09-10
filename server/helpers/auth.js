@@ -10,6 +10,13 @@ const validateSignature = async (signature, message) => {
     ["\x19Ethereum Signed Message:\n32", messageDigest]
   );
   const signerAddress = recoverAddress(messageDigest, signature);
+
+  // check to ensure signature was generated within 1 hour
+  const currentTime = Math.round(Date.now() / 1000);
+  if (currentTime - message.createdAt > 60 * 60) {
+    return false;
+  }
+
   return signerAddress == message.owner;
 };
 
