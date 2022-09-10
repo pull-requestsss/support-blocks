@@ -82,7 +82,7 @@ const DonationPage = () => {
               <div className="tea-amount">1 tea = $ 5</div>
               <div className="tea-amount1">$ 5 ≈ 0.03 ETH</div>
 
-              <button className="main-btn" style={{ margin: "0.5rem 1rem" }}>
+              <button className="main-btn" style={{ margin: "0.1rem 1rem" }}>
                 Support $5
               </button>
             </div>
