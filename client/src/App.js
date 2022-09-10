@@ -1,9 +1,12 @@
 import React from 'react'
-import Main from './Main'
+import "./App.css";
+import LandingPage from './pages/LandingPage';
 
 const App = () => {
   return (
-    <Main />
+    <div>
+      <LandingPage />
+    </div>
   )
 }
 
