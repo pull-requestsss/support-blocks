@@ -65,8 +65,42 @@ const initUpdateUser = async (req, res) => {
   return res.sendStatus(500);
 };
 
-const isNotEmpty = async (value) => {
-  return value != null || value != undefined;
+const getUserDetails = async (req, res) => {
+  const queriedSlug = req.query.slug;
+  const queriedWallet = req.query.wallet;
+
+  if (queriedSlug == undefined && queriedWallet == undefined) {
+    return res
+      .status(400)
+      .send({ message: "wallet/slug query params missing" });
+  }
+
+  if (queriedWallet != undefined) {
+    const foundUser = await User.findOne({
+      walletAddress: queriedWallet,
+    }).select(["-_id", "-__v", "-createdAt", "-updatedAt"]);
+    if (foundUser) {
+      return res.status(200).send({ user: foundUser });
+    }
+  }
+
+  if (queriedSlug != undefined) {
+    const foundUser = await User.findOne({ slug: queriedSlug }).select([
+      "-_id",
+      "-__v",
+      "-createdAt",
+      "-updatedAt",
+    ]);
+    if (foundUser) {
+      return res.status(200).send({ user: foundUser });
+    }
+  }
+
+  return res.status(404).send({ message: "no user found" });
 };
 
-module.exports = { initUpdateUser };
+const isNotEmpty = async (value) => {
+  return value !== undefined || value !== null;
+};
+
+module.exports = { initUpdateUser, getUserDetails };
