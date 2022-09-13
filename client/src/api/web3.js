@@ -1,7 +1,8 @@
 import Web3Modal from "web3modal";
 import { providers } from "ethers";
 import WalletConnect from "@walletconnect/web3-provider";
-
+import { setAccount, setProvider, setSigner } from "../redux/web3Slice";
+import { solidityKeccak256, arrayify } from "ethers/lib/utils";
 
 const providerOptions = {
     walletconnect: {
@@ -17,12 +18,33 @@ const web3Modal = new Web3Modal({
     cacheProvider: false
 });
 
-export const connectWallet = async () => {
+const init = async () => {
     const web3Provider = await web3Modal.connect();
 
     const provider = new providers.Web3Provider(web3Provider);
     const accounts = await provider.send('eth_requestAccounts', []);
-    console.log(accounts[0]);
+    const signer = provider.getSigner();
+    return { provider, accounts, signer };
+}
+
+export const connectWallet = async (provider, signer, account, dispatch) => {
+    if (provider == undefined) {
+        const { provider, accounts, signer } = await init();
+        dispatch(setSigner({ signer: signer }));
+        dispatch(setProvider({ provider: provider }));
+        dispatch(setAccount({ account: accounts[0] }));
+        return { _provider: provider, _account: accounts[0], _signer: signer };
+    }
+    return { _provider: provider, _account: account, _signer: signer };
+
+}
+
+
+export const getSignature = async (signer, message) => {
+    var messageDigest = solidityKeccak256(['string', 'uint256', 'address'], [message.message, message.createdAt, message.owner]);
+    console.log("messageDigest", messageDigest);
+    const signature = await signer.signMessage(arrayify(messageDigest));
+    return signature;
 }
 
 export const logout = () => {

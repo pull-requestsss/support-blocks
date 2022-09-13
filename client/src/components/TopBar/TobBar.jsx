@@ -1,8 +1,92 @@
 import React from "react";
 import logo from "../../assets/logo.png";
-import { connectWallet } from "../../api/web3";
+import { connectWallet, getSignature } from "../../api/web3";
+import { verify } from "../../api/auth";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { setJWT } from "../../redux/userDataSlice";
+import { useNavigate } from "react-router-dom";
 
 const TobBar = () => {
+  const { provider, signer, account } = useSelector(
+    (state) => state.web3Config
+  );
+  const { JWT } = useSelector((state) => state.userConfig);
+  const [_provider, setProvider] = useState(undefined);
+  const [_signer, setSigner] = useState(undefined);
+  const [_account, setAccount] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const init = async () => {
+    const { _provider, _signer, _account } = await connectWallet(
+      provider,
+      signer,
+      account,
+      dispatch
+    );
+    setProvider(_provider);
+    setSigner(_signer);
+    setAccount(_account);
+    return { _provider, _signer, _account };
+  };
+
+  const getAccount = (__account) => {
+    return __account.substring(0, 10) + "...";
+  };
+
+  const _getSignature = async () => {
+    const timeNow = Math.round(Date.now() / 1000);
+    if (provider == undefined || signer == undefined) {
+      const { _signer, _account } = await connectWallet(
+        provider,
+        signer,
+        account,
+        dispatch
+      );
+      const message = {
+        message: "Welcome to buy me a CrypTea",
+        createdAt: timeNow,
+        owner: _account,
+      };
+      const sig = await getSignature(_signer, message);
+      return { sig, message };
+    } else {
+      const message = {
+        message: "Welcome to buy me a CrypTea",
+        createdAt: timeNow,
+        owner: _account,
+      };
+      const sig = await getSignature(_signer, message);
+      return { sig, message };
+    }
+  };
+
+  const launchApp = async () => {
+    if (JWT == undefined) {
+      try {
+        const { sig, message } = await _getSignature();
+        const payload = { ...message, signature: sig };
+        const res = await verify(payload);
+        console.log(res);
+
+        dispatch(setJWT({ JWT: res.accessToken }));
+
+        if (res.isNewUser) {
+          navigate("/setup");
+        } else {
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        console.log(error);
+        window.alert(error);
+      }
+    } else {
+      navigate("/setup");
+    }
+  };
+
   return (
     <div className="navbar-area headroom">
       <div className="container">
@@ -58,10 +142,19 @@ const TobBar = () => {
                   </li>
                 </ul>
               </div>
-
+              <div
+                className="navbar-btn d-none d-sm-inline-block"
+                style={{ marginRight: "2rem" }}
+              >
+                <button className="main-btn" onClick={launchApp}>
+                  Launch App
+                </button>
+              </div>
               <div className="navbar-btn d-none d-sm-inline-block">
-                <button className="main-btn" onClick={connectWallet}>
-                  Connect Wallet
+                <button className="main-btn" onClick={init}>
+                  {account == undefined
+                    ? "Connect Wallet"
+                    : getAccount(account)}
                 </button>
               </div>
             </nav>
