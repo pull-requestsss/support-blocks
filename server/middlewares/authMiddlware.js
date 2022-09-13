@@ -24,7 +24,6 @@ const authMiddleware = async (req, res, next) => {
     res.locals.walletAddress = decodedJwt.wallet;
     next();
   } catch (err) {
-    console.log(err);
     return res.status(401).send({ error: "could not validate accesstoken" });
   }
 };
