@@ -4,14 +4,14 @@ import "./SignUp.css";
 const SignUp = () => {
   return (
     <div className="container signup-wrapper">
-      <div class="row">
-        <div class="col-lg-12">
+      <div className="row">
+        <div className="col-lg-12">
           <div
-            class="contact-wrapper-form pt-115  wow fadeInUpBig"
+            className="contact-wrapper-form pt-115  wow fadeInUpBig"
             data-wow-duration="1s"
             data-wow-delay="0.5s"
           >
-            <h4 class="contact-title signup-title">
+            <h4 className="contact-title signup-title">
               First Time{" "}
               <span style={{ color: "#f14836", fontWeight: "800" }}>?</span>
             </h4>
@@ -28,9 +28,9 @@ const SignUp = () => {
             </h5>
 
             <form id="contact-form" action="assets/contact.php" method="post">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="contact-form mt-45">
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="contact-form mt-45">
                     <label>
                       Your ETH Address{" "}
                       <span style={{ color: "#f14836" }}>*</span>
@@ -38,8 +38,8 @@ const SignUp = () => {
                     <input type="text" name="name" placeholder="0x883adf..." />
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="contact-form mt-45">
+                <div className="col-md-6">
+                  <div className="contact-form mt-45">
                     <label>
                       Username <span style={{ color: "#f14836" }}>*</span>
                     </label>
@@ -50,8 +50,8 @@ const SignUp = () => {
                     />
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="contact-form mt-45">
+                <div className="col-md-6">
+                  <div className="contact-form mt-45">
                     <label>Your Industry</label>
                     <input
                       type="text"
@@ -60,8 +60,8 @@ const SignUp = () => {
                     />
                   </div>
                 </div>
-                <div class="col-md-6">
-                  <div class="contact-form mt-45">
+                <div className="col-md-6">
+                  <div className="contact-form mt-45">
                     <label>Featured URL</label>
                     <input
                       type="email"
@@ -70,8 +70,8 @@ const SignUp = () => {
                     />
                   </div>
                 </div>
-                <div class="col-md-12">
-                  <div class="contact-form mt-45">
+                <div className="col-md-12">
+                  <div className="contact-form mt-45">
                     <label>Your description</label>
                     <textarea
                       name="message"
@@ -79,10 +79,10 @@ const SignUp = () => {
                     ></textarea>
                   </div>
                 </div>
-                <p class="form-message"></p>
-                <div class="col-md-12">
-                  <div class="contact-form mt-45">
-                    <button type="submit" class="main-btn">
+                <p className="form-message"></p>
+                <div className="col-md-12">
+                  <div className="contact-form mt-45">
+                    <button type="submit" className="main-btn">
                       Sign Up
                     </button>
                   </div>
