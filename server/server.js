@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors")
 require("dotenv").config();
 
 const connectDb = require("./db/connection");
@@ -11,9 +12,14 @@ const app = express();
 
 const PORT = process.env.APP_PORT || 8080;
 const APP_ENV = process.env.APP_ENV || "production";
+// const corsOptions = {
+//   origin : "*",
+//   optionsSuccessStatus : 200
+// }
 
 APP_ENV == "dev" ? app.use(morgan("dev")) : app.use(morgan("combined"));
 
+app.use(cors())
 app.use(express.json());
 app.use(authMiddleware);
 
