@@ -17,7 +17,7 @@ const validateSignature = async (signature, message) => {
     return false;
   }
 
-  return signerAddress == message.owner;
+  return signerAddress.toLowerCase() == message.owner.toLowerCase();
 };
 
 module.exports = { validateSignature };
