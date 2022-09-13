@@ -27,8 +27,11 @@ const loginSignupController = async (req, res) => {
   }
 
   const foundUser = await User.findOne({ walletAddress: owner });
-  const isSlugPresent =
-    foundUser.slug != undefined || foundUser.slug != null ? true : false;
+  var isSlugPresent = false;
+  if (foundUser) {
+    isSlugPresent =
+      foundUser.slug != undefined || foundUser.slug != null ? true : false;
+  }
   const isNewUser = foundUser == undefined || foundUser == null ? true : false;
 
   const accessToken = jwt.sign(
