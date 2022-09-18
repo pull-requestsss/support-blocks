@@ -1,0 +1,12 @@
+.loading-wrapper {
+  height: 90vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-border {
+  width: 3rem !important;
+  height: 3rem !important;
+}

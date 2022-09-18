@@ -45,7 +45,6 @@ export const connectWallet = async (provider, signer, account, dispatch) => {
 
 export const getSignature = async (signer, message) => {
     var messageDigest = solidityKeccak256(['string', 'uint256', 'address'], [message.message, message.createdAt, message.owner]);
-    console.log("messageDigest", messageDigest);
     const signature = await signer.signMessage(arrayify(messageDigest));
     return signature;
 }
@@ -59,7 +58,6 @@ export const getContract = async () => {
     const provider = new providers.Web3Provider(web3Provider);
     await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
-    console.log("signer", signer);
     const contract = new ethers.Contract(constants.crypTeaProxyAddress, crypTea.abi, signer);
     return contract;
 }
@@ -74,13 +72,20 @@ export const performTxn = async (contract, token, tokenAmount, to) => {
             const txn = await contract.donate(
                 token, amtInWei, to, proof, { value: token == constants.ETH ? amtInWei : 0 }
             );
-            const receipt = await txn.wait();
-            resolve(receipt);
+            resolve(txn);
         } catch (error) {
             reject(error);
         }
     })
-
 }
 
-
+export const _getSignature = async (_signer, _account) => {
+    const timeNow = Math.round(Date.now() / 1000);
+    const message = {
+        message: "Welcome to buy me a CrypTea",
+        createdAt: timeNow,
+        owner: _account,
+    };
+    const sig = await getSignature(_signer, message);
+    return { sig, message };
+};

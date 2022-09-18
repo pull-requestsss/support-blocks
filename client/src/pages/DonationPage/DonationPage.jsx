@@ -7,6 +7,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRates, getUserData } from "../../api/web2";
 import { getContract, performTxn } from "../../api/web3";
+import Modal from "react-bootstrap/Modal";
+import Loading from "../../components/Loading/Loading";
 
 const DonationPage = () => {
   const navigate = useNavigate();
@@ -26,7 +28,14 @@ const DonationPage = () => {
     DAI: "1",
     USDT: "1",
   });
+  const [show, setShow] = useState(false);
+  const [txn, setTxn] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
   const [contract, setContract] = useState(undefined);
+  const [isReady, setIsReady] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const getTokenImg = () => {
     if (token == constants.ETH) return constants.ethLogo;
@@ -48,10 +57,15 @@ const DonationPage = () => {
       const _rates = await getRates();
       setRates(_rates);
       setUserData(_userData.user);
+      setIsReady(true);
     } catch (error) {
       console.log(error);
-      window.alert(error);
-      navigate("/");
+      if (error.response.status == 404) {
+        navigate("/notFound");
+      } else {
+        window.alert(error);
+        navigate("/");
+      }
     }
   };
 
@@ -76,7 +90,6 @@ const DonationPage = () => {
       var _contract = contract;
       if (contract == undefined) {
         _contract = await getContract();
-        console.log(_contract);
         setContract(_contract);
       }
       if (token != constants.ETH) {
@@ -84,24 +97,44 @@ const DonationPage = () => {
         // check permission
         // take persmission
       }
-      const txn = await performTxn(
+      const _txn = await performTxn(
         _contract,
         token,
         calculateTokenAmount(),
         userData.walletAddress
       );
-      console.log("txn", txn);
-    } catch (error) {}
+      setTxn(_txn.hash);
+      handleShow();
+      const receipt = await _txn.wait();
+      handleClose();
+      setShowSuccess(true);
+    } catch (error) {
+      console.log(error);
+      window.alert(error.message);
+    }
   };
 
   useEffect(() => {
     getData();
   }, []);
 
+  if (!isReady) {
+    return <Loading />;
+  }
+
   return (
     <div className="main-content">
       <div className="container mt-15">
         <div className="row">
+          {showSuccess ? (
+            <div className="alert alert-success success-message" role="alert">
+              <span>
+                The donation has successfully reached your favorite creator
+              </span>
+              <span>Thank you for your support !! ❤️</span>
+            </div>
+          ) : null}
+
           <div className="col-xl-5 order-l-1 mb-5 mb-xl-0">
             <div className="card card-profile shadow">
               <div className="row justify-content-center dp-wrapper">
@@ -207,6 +240,28 @@ const DonationPage = () => {
           </div>
         </div>
       </div>
+      <Modal
+        show={show}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <div className="modal-inner-wrapper">
+          <div
+            className="spinner-border text-secondary"
+            style={{ width: "3rem", height: "3rem" }}
+            role="status"
+          ></div>
+          <span>Please wait while your transaction is processing...</span>
+          <span>
+            see on etherscan{" "}
+            <a href={`https://goerli.etherscan.io/tx/${txn}`} target="_blank">
+              {txn.substring(0, 8) + "..."}
+            </a>
+          </span>
+        </div>
+      </Modal>
     </div>
   );
 };

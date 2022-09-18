@@ -1,5 +1,6 @@
 import axios from "axios";
 import constants from "../constants.json";
+import jwt_decode from "jwt-decode";
 
 export const getUserData = async (slug) => {
     return new Promise(async (resolve, reject) => {
@@ -29,3 +30,37 @@ export const getRates = async () => {
         }
     })
 }
+
+export const verify = async (payload) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/verify";
+            const res = await axios.post(url, payload);
+
+            resolve(res.data);
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+export const users = async (payload, JWT) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/users";
+            const res = await axios.post(url, payload, { headers: { Authorization: JWT } });
+            resolve(res.data);
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+export const verifyJWT = (token, account) => {
+    var decoded = jwt_decode(token);
+    const time = Math.floor(Date.now() / 1000) + 1800;
+    var isValid = decoded.wallet == account;
+    isValid = isValid || (decoded.exp <= time);
+    return isValid;
+}
+

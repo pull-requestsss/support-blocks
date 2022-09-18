@@ -1,0 +1,17 @@
+.error-wrapper {
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-wrapper img {
+  width: 35rem;
+  height: 35rem;
+}
+
+.error-wrapper span {
+  font-size: 2.25rem;
+}
