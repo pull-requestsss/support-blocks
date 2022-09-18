@@ -1,3 +1,12 @@
 {
-    "baseURL" : "http://192.168.0.122:8080/api"
+    "baseURL" : "http://192.168.0.122:8080/api",
+    "ETH" : "0x0000000000000000000000000000000000000000",
+    "WETH" : "0x1",
+    "DAI" : "0x2",
+    "USDT" : "0x3",
+    "ethLogo" : "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
+    "wethLogo" : "https://openseauserdata.com/files/accae6b6fb3888cbff27a013729c22dc.svg",
+    "daiLogo" : "https://assets.coingecko.com/coins/images/9956/large/4943.png?1636636734",
+    "usdtLogo" : "https://cryptologos.cc/logos/tether-usdt-logo.png?v=023",
+    "crypTeaProxyAddress" : "0x90AE89ec38cF7d94D4a2Cea05aB4A08eFA4C8AF7"
 }

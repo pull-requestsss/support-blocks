@@ -1,8 +1,11 @@
 import Web3Modal from "web3modal";
+import { ethers } from "ethers";
 import { providers } from "ethers";
 import WalletConnect from "@walletconnect/web3-provider";
 import { setAccount, setProvider, setSigner } from "../redux/web3Slice";
 import { solidityKeccak256, arrayify } from "ethers/lib/utils";
+import crypTea from "../contracts/crypTea.json";
+import constants from "../constants.json";
 
 const providerOptions = {
     walletconnect: {
@@ -49,6 +52,35 @@ export const getSignature = async (signer, message) => {
 
 export const logout = () => {
     web3Modal.clearCachedProvider();
+}
+
+export const getContract = async () => {
+    const web3Provider = await web3Modal.connect();
+    const provider = new providers.Web3Provider(web3Provider);
+    await provider.send('eth_requestAccounts', []);
+    const signer = provider.getSigner();
+    console.log("signer", signer);
+    const contract = new ethers.Contract(constants.crypTeaProxyAddress, crypTea.abi, signer);
+    return contract;
+}
+
+
+export const performTxn = async (contract, token, tokenAmount, to) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // get merkleproof of the given token
+            const proof = [];
+            const amtInWei = ethers.utils.parseUnits(tokenAmount, 18);
+            const txn = await contract.donate(
+                token, amtInWei, to, proof, { value: token == constants.ETH ? amtInWei : 0 }
+            );
+            const receipt = await txn.wait();
+            resolve(receipt);
+        } catch (error) {
+            reject(error);
+        }
+    })
+
 }
 
 
