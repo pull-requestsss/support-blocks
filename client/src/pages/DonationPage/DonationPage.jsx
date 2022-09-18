@@ -1,10 +1,103 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import constants from "../../constants.json";
 import "./DonationPage.css";
 import logo from "../../assets/logo.png";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { useParams, useNavigate } from "react-router-dom";
+import { getRates, getUserData } from "../../api/web2";
+import { getContract, performTxn } from "../../api/web3";
 
 const DonationPage = () => {
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const [userData, setUserData] = useState({
+    walletAddress: "",
+    featuredUrl: "",
+    industry: "",
+    intro: "",
+    slug: "",
+  });
+  const [quantity, setQuantity] = useState(1);
+  const [token, setToken] = useState(constants.ETH);
+  const [rates, setRates] = useState({
+    ETH: "0",
+    WETH: "0",
+    DAI: "1",
+    USDT: "1",
+  });
+  const [contract, setContract] = useState(undefined);
+
+  const getTokenImg = () => {
+    if (token == constants.ETH) return constants.ethLogo;
+    if (token == constants.WETH) return constants.wethLogo;
+    if (token == constants.DAI) return constants.daiLogo;
+    if (token == constants.USDT) return constants.usdtLogo;
+  };
+
+  const getTokenName = () => {
+    if (token == constants.ETH) return "ETH";
+    if (token == constants.WETH) return "WETH";
+    if (token == constants.DAI) return "DAI";
+    if (token == constants.USDT) return "USDT";
+  };
+
+  const getData = async () => {
+    try {
+      const _userData = await getUserData(slug);
+      const _rates = await getRates();
+      setRates(_rates);
+      setUserData(_userData.user);
+    } catch (error) {
+      console.log(error);
+      window.alert(error);
+      navigate("/");
+    }
+  };
+
+  const calculateTokenAmount = () => {
+    const amt = calculateAmount();
+    if (token == constants.ETH || token == constants.WETH) {
+      return (amt / rates.ETH).toFixed(4);
+    }
+    return amt;
+  };
+
+  const calculateAmount = () => {
+    return quantity * 5;
+  };
+
+  const getAddress = (address) => {
+    return address.substr(0, 12) + "...";
+  };
+
+  const makeTransfer = async () => {
+    try {
+      var _contract = contract;
+      if (contract == undefined) {
+        _contract = await getContract();
+        console.log(_contract);
+        setContract(_contract);
+      }
+      if (token != constants.ETH) {
+        console.log(token);
+        // check permission
+        // take persmission
+      }
+      const txn = await performTxn(
+        _contract,
+        token,
+        calculateTokenAmount(),
+        userData.walletAddress
+      );
+      console.log("txn", txn);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="main-content">
       <div className="container mt-15">
@@ -16,7 +109,7 @@ const DonationPage = () => {
                   <div className="card-profile-image">
                     <a href="#">
                       <img
-                        src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg"
+                        src="https://disaster-analytics.com/wp-content/uploads/2014/05/blank-profile-picture-973460_640.png"
                         className="rounded-circle"
                       />
                     </a>
@@ -25,20 +118,14 @@ const DonationPage = () => {
               </div>
               <div className="card-body pt-0 pt-md-4">
                 <div className="text-center">
-                  <h3>Jessica Jones</h3>
+                  <h4>{getAddress(userData.walletAddress)}</h4>
                   <div className="h5 font-weight-300">
                     buymeacryptea.club/
-                    <i className="ni location_pin mr-2">username</i>
+                    <i className="ni location_pin mr-2">{userData.slug}</i>
                   </div>
-                  <div className="h5 mt-4">Industry</div>
+                  <div className="h5 mt-4">{userData.industry}</div>
                   <hr className="my-4" />
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Quos, natus enim autem tempore placeat, provident obcaecati,
-                    excepturi dolorem perspiciatis maiores molestias ipsum
-                    velit. Et, delectus odit veritatis ipsa sit illum dolorem
-                    quaerat quia sunt eveniet!
-                  </p>
+                  <p>{userData.intro}</p>
                 </div>
               </div>
             </div>
@@ -46,44 +133,75 @@ const DonationPage = () => {
           <div className="col-xl-7 order-l-2">
             <div className="main-card card shadow">
               <div className="donations-wrapper">
-                <h3>Buy USERNAME a Tea</h3>
+                <h3>
+                  Buy <i>{getAddress(userData.walletAddress)}</i> a Tea
+                </h3>
               </div>
               <div className="counter-wrapper">
                 <img src={logo} alt="" className="counter-img" />
                 <span className="mult">x</span>
-                <span className="donation-preset">1</span>
-                <span className="donation-preset">1</span>
-                <span className="donation-preset">1</span>
-                <input type="number" value={"1"} />
+                <span
+                  className={`donation-preset ${quantity == 1 ? "active" : ""}`}
+                  onClick={() => setQuantity(1)}
+                >
+                  1
+                </span>
+                <span
+                  className={`donation-preset ${quantity == 3 ? "active" : ""}`}
+                  onClick={() => setQuantity(3)}
+                >
+                  3
+                </span>
+                <span
+                  className={`donation-preset ${quantity == 5 ? "active" : ""}`}
+                  onClick={() => setQuantity(5)}
+                >
+                  5
+                </span>
+                <input
+                  type="number"
+                  value={quantity}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
               </div>
               <div className="token-wrapper">
                 <img
-                  src={logo}
+                  src={getTokenImg()}
                   alt=""
-                  style={{ width: "4rem", margin: "1rem 3rem" }}
+                  className={`${token == constants.WETH ? "small-img" : ""}`}
+                  style={{ width: "3.5rem", margin: "1rem 3rem" }}
                 />
                 <DropdownButton
                   key={1}
                   id={`dropdown-button-drop-${1}`}
                   size="lg"
-                  title="Select a token to pay"
+                  title={getTokenName()}
                   variant="secondary"
                 >
-                  <Dropdown.Item eventKey="1">Action</Dropdown.Item>
-                  <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-                  <Dropdown.Item eventKey="3">
-                    Something else here
+                  <Dropdown.Item onClick={() => setToken(constants.ETH)}>
+                    Ethereum
                   </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item eventKey="4">Separated link</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setToken(constants.WETH)}>
+                    Wrapped Eth
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setToken(constants.DAI)}>
+                    Dai Stable coin
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => setToken(constants.USDT)}>
+                    Tether stable coin
+                  </Dropdown.Item>
                 </DropdownButton>
               </div>
 
               <div className="tea-amount">1 tea = $ 5</div>
-              <div className="tea-amount1">$ 5 ≈ 0.03 ETH</div>
+              <div className="tea-amount1">{`$ ${calculateAmount()} ≈ ${calculateTokenAmount()} ${getTokenName()}`}</div>
 
-              <button className="main-btn" style={{ margin: "0.1rem 1rem" }}>
-                Support $5
+              <button
+                className="main-btn"
+                style={{ margin: "0.1rem 1rem" }}
+                onClick={makeTransfer}
+              >
+                Support ${calculateAmount()}
               </button>
             </div>
           </div>

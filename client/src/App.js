@@ -18,8 +18,8 @@ const App = () => {
         <Route path="/setup" element={<>
           <TobBar /><SignUp />
         </>} />
-        <Route path="/donation" element={<>
-          <DonationPage />
+        <Route path="/:slug" element={<>
+          <TobBar donation={true}/><DonationPage />
         </>} />
         <Route path="/dashboard" element={<><TobBar /><Dashboard /></>} />
       </Routes>

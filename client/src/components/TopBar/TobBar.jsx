@@ -7,7 +7,7 @@ import { useState } from "react";
 import { setJWT } from "../../redux/userDataSlice";
 import { useNavigate } from "react-router-dom";
 
-const TobBar = () => {
+const TobBar = ({ donation }) => {
   const { provider, signer, account } = useSelector(
     (state) => state.web3Config
   );
@@ -142,21 +142,27 @@ const TobBar = () => {
                   </li>
                 </ul>
               </div>
-              <div
-                className="navbar-btn d-none d-sm-inline-block"
-                style={{ marginRight: "2rem" }}
-              >
-                <button className="main-btn" onClick={launchApp}>
-                  Launch App
-                </button>
-              </div>
-              <div className="navbar-btn d-none d-sm-inline-block">
-                <button className="main-btn" onClick={init}>
-                  {account == undefined
-                    ? "Connect Wallet"
-                    : getAccount(account)}
-                </button>
-              </div>
+              {donation ? (
+                <></>
+              ) : (
+                <>
+                  <div
+                    className="navbar-btn d-none d-sm-inline-block"
+                    style={{ marginRight: "2rem" }}
+                  >
+                    <button className="main-btn" onClick={launchApp}>
+                      Launch App
+                    </button>
+                  </div>
+                  <div className="navbar-btn d-none d-sm-inline-block">
+                    <button className="main-btn" onClick={init}>
+                      {account == undefined
+                        ? "Connect Wallet"
+                        : getAccount(account)}
+                    </button>
+                  </div>
+                </>
+              )}
             </nav>
           </div>
         </div>

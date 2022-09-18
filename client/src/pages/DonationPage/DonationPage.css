@@ -105,3 +105,11 @@
   border-radius: 5px;
   padding: 0.5rem 0.75rem;
 }
+
+.active {
+  background-color: #f1493636;
+}
+
+.small-img {
+  width: 2rem !important;
+}
