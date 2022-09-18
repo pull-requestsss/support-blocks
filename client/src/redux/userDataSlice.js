@@ -14,7 +14,7 @@ const userDataSlice = createSlice({
         setJWT: (state, action) => {
             const { JWT } = action.payload;
             state.JWT = JWT;
-        }
+        },
     }
 });
 

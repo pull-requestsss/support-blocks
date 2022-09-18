@@ -6,7 +6,8 @@ const web3ConfigSlice = createSlice({
         provider: undefined,
         signer: undefined,
         contract: undefined,
-        account: undefined
+        account: undefined,
+        merkleTree: undefined
     },
     reducers: {
         setProvider: (state, action) => {
@@ -24,9 +25,13 @@ const web3ConfigSlice = createSlice({
         setAccount: (state, action) => {
             const { account } = action.payload;
             state.account = account;
+        },
+        setMerkleTree: (state, action) => {
+            const { merkleTree } = action.payload;
+            state.merkleTree = merkleTree;
         }
     }
 });
 
-export const { setProvider, setSigner, setContract, setAccount } = web3ConfigSlice.actions;
+export const { setProvider, setSigner, setContract, setAccount, setMerkleTree } = web3ConfigSlice.actions;
 export default web3ConfigSlice.reducer;

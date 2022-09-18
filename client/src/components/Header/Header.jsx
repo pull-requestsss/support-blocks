@@ -3,67 +3,46 @@ import "./Header.css";
 import Img from "../../assets/Hot-beverage.gif";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { getSignature, connectWallet } from "../../api/web3";
-import { setJWT } from "../../redux/userDataSlice";
-import { verify } from "../../api/auth";
+import { _getSignature, connectWallet } from "../../api/web3";
+import { verify, verifyJWT } from "../../api/web2";
 import { setLandingSlug } from "../../redux/userDataSlice";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
   const { provider, signer, account } = useSelector(
     (state) => state.web3Config
   );
-  const { JWT } = useSelector((state) => state.userConfig);
+  const [JWT, setJWT] = useState(localStorage.getItem("JWT"));
 
   const [userSlug, setUserSlug] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const iniSignup = async () => {
-    if (JWT == undefined) {
-      try {
-        const { sig, message } = await _getSignature();
+    var _jwt = JWT;
+    var _isNewUser = localStorage.getItem("isNewUser");
+    var _signer = signer;
+    var _account = account;
+    try {
+      if (provider == undefined || signer == undefined) {
+        const res = await connectWallet(provider, signer, account, dispatch);
+        _signer = res._signer;
+        _account = res._account;
+      }
+      if (JWT == undefined || !verifyJWT(_jwt, _account)) {
+        const { sig, message } = await _getSignature(_signer, _account);
         const payload = { ...message, signature: sig };
         const res = await verify(payload);
-        dispatch(setJWT({ JWT: res.accessToken }));
+        localStorage.setItem("JWT", res.accessToken);
+        setJWT(res.accessToken);
+        _jwt = res.accessToken;
         dispatch(setLandingSlug({ landingSlug: userSlug }));
-        if (res.isNewUser) {
-          navigate("/setup");
-        } else {
-          navigate("/dashboard");
-        }
-      } catch (error) {
-        console.log(error);
-        window.alert(error);
+        _isNewUser = res.isNewUser;
       }
-    }
-  };
-
-  const _getSignature = async () => {
-    const timeNow = Math.round(Date.now() / 1000);
-    if (provider == undefined || signer == undefined) {
-      const { _signer, _account } = await connectWallet(
-        provider,
-        signer,
-        account,
-        dispatch
-      );
-      const message = {
-        message: "Welcome to buy me a CrypTea",
-        createdAt: timeNow,
-        owner: _account,
-      };
-      const sig = await getSignature(_signer, message);
-      dispatch(setLandingSlug({ landingSlug: userSlug }));
-      return { sig, message };
-    } else {
-      const message = {
-        message: "Welcome to buy me a CrypTea",
-        createdAt: timeNow,
-        owner: account,
-      };
-      const sig = await getSignature(signer, message);
-      dispatch(setLandingSlug({ landingSlug: userSlug }));
-      return { sig, message };
+      localStorage.setItem("isNewUser", _isNewUser);
+      _isNewUser ? navigate("/setup") : navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+      window.alert(error);
     }
   };
 

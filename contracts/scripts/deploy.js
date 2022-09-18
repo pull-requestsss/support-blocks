@@ -25,7 +25,6 @@ async function main() {
 const delegate = async () => {
     const NODE_URL = "https://goerli.infura.io/v3/8ac850d25c714781a6233cd035253301"
     const KEY = fs.readFileSync(".secret").toString().trim();
-    console.log(KEY);
     const provider = new ethers.providers.JsonRpcProvider(NODE_URL);
     const signer = new ethers.Wallet(KEY, provider);
 

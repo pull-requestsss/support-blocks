@@ -2,18 +2,17 @@ import React from "react";
 import { useState } from "react";
 import "./SignUp.css";
 import { useSelector, useDispatch } from "react-redux";
-import { verify } from "../../api/auth";
+import { verify, users, verifyJWT } from "../../api/web2";
 import { useEffect } from "react";
-import { connectWallet, getSignature } from "../../api/web3";
+import { connectWallet, _getSignature } from "../../api/web3";
 import { useNavigate } from "react-router-dom";
-import { setJWT } from "../../redux/userDataSlice";
-import { users } from "../../api/setup";
-
+import Loading from "../../components/Loading/Loading";
 const SignUp = () => {
   const { provider, signer, account } = useSelector(
     (state) => state.web3Config
   );
-  const { landingSlug, JWT } = useSelector((state) => state.userConfig);
+  const [JWT, setJWT] = useState(localStorage.getItem("JWT"));
+  const { landingSlug } = useSelector((state) => state.userConfig);
   const [data, setData] = useState({
     slug: landingSlug,
     intro: "",
@@ -22,82 +21,61 @@ const SignUp = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const _getSignature = async () => {
-    const timeNow = Math.round(Date.now() / 1000);
-    if (provider == undefined || signer == undefined) {
-      const { _signer, _account } = await connectWallet(
-        provider,
-        signer,
-        account,
-        dispatch
-      );
-      const message = {
-        message: "Welcome to buy me a CrypTea",
-        createdAt: timeNow,
-        owner: _account,
-      };
-      const sig = await getSignature(_signer, message);
-      return { sig, message };
-    } else {
-      const message = {
-        message: "Welcome to buy me a CrypTea",
-        createdAt: timeNow,
-        owner: account,
-      };
-      const sig = await getSignature(signer, message);
-      return { sig, message };
-    }
-  };
+  const [isLoading, setIsLoading] = useState(true);
 
   const launchApp = async () => {
-    if (JWT == undefined) {
-      try {
-        const { sig, message } = await _getSignature();
+    var _jwt = JWT;
+    var _isNewUser = localStorage.getItem("isNewUser");
+    var _signer = signer;
+    var _account = account;
+    try {
+      if (provider == undefined || signer == undefined) {
+        const res = await connectWallet(provider, signer, account, dispatch);
+        _signer = res._signer;
+        _account = res._account;
+      }
+      if (JWT == undefined || !verifyJWT(_jwt, _account)) {
+        const { sig, message } = await _getSignature(_signer, _account);
         const payload = { ...message, signature: sig };
         const res = await verify(payload);
-        console.log(res);
-
-        dispatch(setJWT({ JWT: res.accessToken }));
-
-        if (res.isNewUser) {
-          navigate("/setup");
-        } else {
-          navigate("/dashboard");
-        }
-      } catch (error) {
-        console.log(error);
-        window.alert(error);
-        navigate("/");
+        localStorage.setItem("JWT", res.accessToken);
+        setJWT(res.accessToken);
+        _jwt = res.accessToken;
+        _isNewUser = res.isNewUser;
       }
-    } else {
-      navigate("/setup");
+      localStorage.setItem("isNewUser", _isNewUser);
+      _isNewUser == true || _isNewUser == "true"
+        ? navigate("/setup")
+        : navigate("/dashboard");
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      window.alert(error);
+      navigate("/");
     }
   };
 
   useEffect(() => {
-    if (provider == undefined) {
-      launchApp();
-    }
+    launchApp();
   }, []);
 
   const isReady = () => {
-    return typeof JWT != "undefined";
+    return isLoading;
   };
 
   const submitDetails = async (e) => {
     e.preventDefault();
     try {
       const res = await users(data, JWT);
-      console.log("res", res);
+      localStorage.setItem("isNewUser", false);
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
       window.alert(error.response.data.error);
-      // window.location.reload();
     }
   };
 
-  if (!isReady()) return <></>;
+  if (isReady()) return <Loading />;
 
   return (
     <div className="container signup-wrapper">
