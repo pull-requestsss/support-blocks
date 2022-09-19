@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import constants from "../../constants.json";
 import "./DonationPage.css";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/singleBlock.svg";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useParams, useNavigate } from "react-router-dom";
-import { getRates, getUserData } from "../../api/web2";
+import { getRates, getUserData, sendAnalytics } from "../../api/web2";
 import { getContract, performTxn } from "../../api/web3";
 import Modal from "react-bootstrap/Modal";
 import Loading from "../../components/Loading/Loading";
@@ -108,6 +108,7 @@ const DonationPage = () => {
       const receipt = await _txn.wait();
       handleClose();
       setShowSuccess(true);
+      await sendAnalytics(userData.walletAddress);
     } catch (error) {
       console.log(error);
       window.alert(error.message);
@@ -153,7 +154,7 @@ const DonationPage = () => {
                 <div className="text-center">
                   <h4>{getAddress(userData.walletAddress)}</h4>
                   <div className="h5 font-weight-300">
-                    buymeacryptea.club/
+                    supportingblocks.club/
                     <i className="ni location_pin mr-2">{userData.slug}</i>
                   </div>
                   <div className="h5 mt-4">{userData.industry}</div>
@@ -167,7 +168,7 @@ const DonationPage = () => {
             <div className="main-card card shadow">
               <div className="donations-wrapper">
                 <h3>
-                  Buy <i>{getAddress(userData.walletAddress)}</i> a Tea
+                  Buy <i>{getAddress(userData.walletAddress)}</i> a Block
                 </h3>
               </div>
               <div className="counter-wrapper">
@@ -226,7 +227,7 @@ const DonationPage = () => {
                 </DropdownButton>
               </div>
 
-              <div className="tea-amount">1 tea = $ 5</div>
+              <div className="tea-amount">1 block = $ 5</div>
               <div className="tea-amount1">{`$ ${calculateAmount()} ≈ ${calculateTokenAmount()} ${getTokenName()}`}</div>
 
               <button

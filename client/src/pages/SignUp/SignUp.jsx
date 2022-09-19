@@ -127,7 +127,7 @@ const SignUp = () => {
                     <input
                       type="text"
                       name="email"
-                      placeholder="cryptea.club/username"
+                      placeholder="supportingblocks.club/username"
                       value={data.slug}
                       onChange={(e) =>
                         setData({ ...data, slug: e.target.value })
