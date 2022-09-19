@@ -28,7 +28,7 @@ const Footer = () => {
           <div className="cr">
             &copy; Copyright{" "}
             <strong>
-              <span>Buy me a CrypTea</span>
+              <span>Supporting Blocks</span>
             </strong>
             . All Rights Reserved
           </div>

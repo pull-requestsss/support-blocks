@@ -64,3 +64,19 @@ export const verifyJWT = (token, account) => {
     return isValid;
 }
 
+export const sendAnalytics = async (account) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/analytics";
+            const payload = {
+                paidTo: account
+            }
+            const res = await axios.post(url, payload);
+            resolve(res.data);
+        } catch (error) {
+            console.log(error);
+            resolve(error);
+        }
+    })
+}
+
