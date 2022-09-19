@@ -4,7 +4,6 @@ const getInfoFromIp = async (ip) => {
   const response = axios
     .get(`https://ipinfo.io/${ip}/json?token=${process.env.IP_INFO_API_KEY}`)
     .then((res) => {
-      console.log(res.status);
       if (res.status / 10 == 20) {
         if(res.data.bogon==true){
           return null;
