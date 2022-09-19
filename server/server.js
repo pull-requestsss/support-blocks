@@ -6,6 +6,7 @@ require("dotenv").config();
 const connectDb = require("./db/connection");
 const { verifyRoutes } = require("./routes/verifyRoutes");
 const { userRoutes } = require("./routes/usersRoutes");
+const { analyticsRoutes } = require("./routes/analytics");
 const { authMiddleware } = require("./middlewares/authMiddlware");
 const { listenForTransactions } = require("./eventListeners/transactions");
 
@@ -13,10 +14,6 @@ const app = express();
 
 const PORT = process.env.APP_PORT || 8080;
 const APP_ENV = process.env.APP_ENV || "production";
-// const corsOptions = {
-//   origin : "*",
-//   optionsSuccessStatus : 200
-// }
 
 APP_ENV == "dev" ? app.use(morgan("dev")) : app.use(morgan("combined"));
 
@@ -26,7 +23,7 @@ app.use(authMiddleware);
 
 app.use("/api/verify", verifyRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/analytics", analyticsRoutes);
 
 connectDb()
   .then(() => {
