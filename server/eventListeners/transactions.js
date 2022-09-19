@@ -174,8 +174,8 @@ const listenForTransactions = async () => {
           sender: from,
           receiver: to,
           token: token,
-          totalAmount: totalAmount,
-          amountReceived: amountReceived,
+          totalAmount: ethers.utils.formatEther(totalAmount),
+          amountReceived: ethers.utils.formatEther(amountReceived),
         });
       } catch (e) {
         console.log(
