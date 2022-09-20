@@ -60,7 +60,7 @@ export const verifyJWT = (token, account) => {
     var decoded = jwt_decode(token);
     const time = Math.floor(Date.now() / 1000) + 1800;
     var isValid = decoded.wallet == account;
-    isValid = isValid || (decoded.exp <= time);
+    isValid = isValid && !(decoded.exp <= time);
     return isValid;
 }
 
