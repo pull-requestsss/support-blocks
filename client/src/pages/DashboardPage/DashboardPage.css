@@ -1,0 +1,23 @@
+.dashboard-outer-wrapper {
+  height: 80vh;
+  width: 100vw;
+}
+
+.dash-selector {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+}
+
+.selector-active {
+  border-bottom: 2px solid #f1493697 !important;
+  font-weight: bold;
+}
+
+.selector-btn {
+  margin: 1rem 1rem;
+  padding: 0.25rem 0.5rem;
+  background-color: white;
+  border: none;
+  outline: none;
+}
