@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const TobBar = ({ donation }) => {
+const TobBar = ({ donation, dash }) => {
   const { provider, signer, account } = useSelector(
     (state) => state.web3Config
   );
@@ -105,9 +105,13 @@ const TobBar = ({ donation }) => {
                     className="navbar-btn d-none d-sm-inline-block"
                     style={{ marginRight: "2rem" }}
                   >
-                    <button className="main-btn" onClick={launchApp}>
-                      Launch App
-                    </button>
+                    {dash ? (
+                      <></>
+                    ) : (
+                      <button className="main-btn" onClick={launchApp}>
+                        Launch App
+                      </button>
+                    )}
                   </div>
                   <div className="navbar-btn d-none d-sm-inline-block">
                     <button className="main-btn" onClick={init}>
