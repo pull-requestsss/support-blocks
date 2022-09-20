@@ -26,6 +26,7 @@ const SignUp = () => {
   const launchApp = async () => {
     var _jwt = JWT;
     var _isNewUser = localStorage.getItem("isNewUser");
+    console.log("JWT", _jwt);
     var _signer = signer;
     var _account = account;
     try {

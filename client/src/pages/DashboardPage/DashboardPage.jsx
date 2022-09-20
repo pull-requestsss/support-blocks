@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Dashboard from "../../components/Dashboard/Dashboard";
+import Profile from "../../components/Profile/Profile";
 import "./DashboardPage.css";
 
 const DashboardPage = () => {
@@ -24,7 +25,9 @@ const DashboardPage = () => {
           </button>
         </div>
         {selector == 0 ? (
-          <div className="profile">Profile</div>
+          <div className="profile">
+            <Profile />
+          </div>
         ) : (
           <div className="dash">
             <Dashboard />
