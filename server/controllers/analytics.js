@@ -51,7 +51,7 @@ const saveAnalytics = async (req, res) => {
     .send({ success: false, message: "failed to save txn analytics data." });
 };
 
-const getAnalytics = async () => {
+const getAnalytics = async (req, res) => {
   const walletAddress = res.locals.walletAddress;
 
   const analyticData = UserTransactionsAnalytics.findOne({
