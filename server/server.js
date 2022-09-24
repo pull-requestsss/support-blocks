@@ -7,6 +7,7 @@ const connectDb = require("./db/connection");
 const { verifyRoutes } = require("./routes/verifyRoutes");
 const { userRoutes } = require("./routes/usersRoutes");
 const { analyticsRoutes } = require("./routes/analytics");
+const { transactionRoutes } = require("./routes/transactions");
 const { authMiddleware } = require("./middlewares/authMiddlware");
 const { listenForTransactions } = require("./eventListeners/transactions");
 
@@ -24,6 +25,7 @@ app.use(authMiddleware);
 app.use("/api/verify", verifyRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/txns", transactionRoutes);
 
 connectDb()
   .then(() => {
