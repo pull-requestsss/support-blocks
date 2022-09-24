@@ -51,4 +51,35 @@ const saveAnalytics = async (req, res) => {
     .send({ success: false, message: "failed to save txn analytics data." });
 };
 
-module.exports = { saveAnalytics };
+const getAnalytics = async () => {
+  const walletAddress = res.locals.walletAddress;
+
+  const analyticData = UserTransactionsAnalytics.findOne({
+    walletAddress: walletAddress,
+  });
+  if (analyticData == null) {
+    return res.status(404).send({
+      message: `no analytics found for user with walletAddress : ${walletAddress}`,
+    });
+  }
+
+  var countryData = {};
+  for (const property in Object.fromEntries(data.geographicalData)) {
+    countryData[property] = Object.fromEntries(
+      Object.fromEntries(data.geographicalData)[property]
+    ).totalTxns;
+  }
+
+  var hourlyData = {};
+  for (const property in Object.fromEntries(data.hourlyData)) {
+    hourlyData[property] = Object.fromEntries(data.hourlyData)[property];
+  }
+  return res.status(200).send({
+    data: {
+      countryData: countryData,
+      hourlyData: hourlyData,
+    },
+  });
+};
+
+module.exports = { saveAnalytics, getAnalytics };
