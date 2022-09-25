@@ -54,10 +54,10 @@ const saveAnalytics = async (req, res) => {
 const getAnalytics = async (req, res) => {
   const walletAddress = res.locals.walletAddress;
 
-  const analyticData = UserTransactionsAnalytics.findOne({
+  const data = await UserTransactionsAnalytics.findOne({
     walletAddress: walletAddress,
   });
-  if (analyticData == null) {
+  if (data == null) {
     return res.status(404).send({
       message: `no analytics found for user with walletAddress : ${walletAddress}`,
     });
