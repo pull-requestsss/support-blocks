@@ -3,7 +3,6 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./ICrypTea.sol";
 
@@ -81,11 +80,11 @@ contract CrypTea is ICrypTea, OwnableUpgradeable {
         address token,
         uint256 amount,
         address to,
-        bytes32[] memory proof
+        bytes32[] calldata proof
     ) external payable override {
         /// check if "token" exist in the whitelistRoot
         bytes32 leaf = keccak256(abi.encodePacked(token));
-        if (!MerkleProof.verify(proof, whitelistRoot, leaf))
+        if (!verifyCalldata(proof, whitelistRoot, leaf))
             revert CrypTeaError(CrypTeaErrorCodes.TOKEN_NOT_WHITELISTED);
 
         /// calculate fees
@@ -148,5 +147,50 @@ contract CrypTea is ICrypTea, OwnableUpgradeable {
         uint256 amount
     ) internal {
         IERC20(token).safeTransferFrom(msg.sender, to, amount);
+    }
+
+    /// @dev Returns true if a `leaf` can be proved to be a part of a Merkle tree
+    /// defined by `root`. For this, a `proof` must be provided, containing
+    /// sibling hashes on the branch from the leaf to the root of the tree. Each
+    /// pair of leaves and each pair of pre-images are assumed to be sorted.
+    function verifyCalldata(
+        bytes32[] calldata proof,
+        bytes32 root,
+        bytes32 leaf
+    ) internal pure returns (bool) {
+        return processProofCalldata(proof, leaf) == root;
+    }
+
+    /// @dev Returns the rebuilt hash obtained by traversing a Merkle tree up
+    /// from `leaf` using `proof`. A `proof` is valid if and only if the rebuilt
+    /// hash matches the root of the tree. When processing the proof, the pairs
+    /// of leafs & pre-images are assumed to be sorted.
+    function processProofCalldata(bytes32[] calldata proof, bytes32 leaf)
+        internal
+        pure
+        returns (bytes32)
+    {
+        bytes32 computedHash = leaf;
+        for (uint256 i = 0; i < proof.length; i++) {
+            computedHash = _hashPair(computedHash, proof[i]);
+        }
+        return computedHash;
+    }
+
+    function _hashPair(bytes32 a, bytes32 b) private pure returns (bytes32) {
+        return a < b ? _efficientHash(a, b) : _efficientHash(b, a);
+    }
+
+    function _efficientHash(bytes32 a, bytes32 b)
+        private
+        pure
+        returns (bytes32 value)
+    {
+        /// @solidity memory-safe-assembly
+        assembly {
+            mstore(0x00, a)
+            mstore(0x20, b)
+            value := keccak256(0x00, 0x40)
+        }
     }
 }
