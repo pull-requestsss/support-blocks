@@ -1,37 +1,157 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "chart.js/auto";
-import { Doughnut, Pie, Line } from "react-chartjs-2";
+import { Doughnut, Pie, Bar } from "react-chartjs-2";
 import "./Dashboard.css";
+import { getAnalyticsData, getTxnData } from "../../api/web2";
 
-const Dashboard = () => {
-  const data = {
-    labels: ["Red", "Blue", "Yellow"],
+const Dashboard = ({ analData, txnData }) => {
+  const [countryData, setCountryData] = useState({
+    labels: [],
     datasets: [
       {
-        label: "My First Dataset",
-        data: [300, 50, 100],
-        backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "rgb(255, 205, 86)",
-        ],
+        data: [],
+        backgroundColor: [],
         hoverOffset: 4,
       },
     ],
-  };
-
-  const lineData = {
-    labels: [0, 1, 2, 3, 4, 5, 6],
+  });
+  const [temporalData, setTemporalData] = useState({
+    labels: [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22, 23, 24,
+    ],
     datasets: [
       {
-        label: "My First Dataset",
-        data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
-        borderColor: "rgb(75, 192, 192)",
-        tension: 0.1,
+        label: "No of Users",
+        data: [
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0,
+        ],
+        backgroundColor: "rgb(54, 162, 235)",
       },
     ],
+  });
+  const colors = [
+    "rgb(255, 99, 132)",
+    "rgb(54, 162, 235)",
+    "rgb(255, 205, 86)",
+    "rgb(75, 192, 192)",
+    "rgb(153, 102, 255)",
+    "rgb(201, 203, 207)",
+  ];
+  const [tokenData, setTokenData] = useState({
+    labels: ["ETH", "USDT", "WETH"],
+    datasets: [
+      {
+        data: [0, 0, 0],
+        backgroundColor: colors,
+        hoverOffset: 4,
+      },
+    ],
+  });
+  const [txns, setTxns] = useState({
+    sender: "",
+    token: "",
+    createdAt: "",
+    amountReceived: {
+      $numberDecimal: 0,
+    },
+  });
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const init = async () => {
+    try {
+      const _analData = analData;
+      _setCountryData(_analData.countryData);
+      _setTimeData(_analData.hourlyData);
+      const _txnData = txnData;
+      setTxns(_txnData.txns);
+      _setTxnData(_txnData.txns);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      window.alert(error);
+      setIsLoading(false);
+    }
   };
+
+  const _setTxnData = (_data) => {
+    const temp = tokenData;
+    const value = {
+      "0x1": 1,
+      "0x00": 2,
+      "0x0000000000000000000000000000000000000000": 0,
+    };
+    for (let i = 0; i < _data.length; i++) {
+      var _temp = _data[i];
+      var idx = value[_temp.token];
+
+      temp.datasets[0].data[idx] += Number(_temp.amountReceived.$numberDecimal);
+    }
+    setTokenData(temp);
+  };
+
+  const _setTimeData = (_data) => {
+    const _timeData = temporalData;
+    for (let i in _data) {
+      _timeData.datasets[0].data[i - 1] += _data[i];
+    }
+    setTemporalData(_timeData);
+  };
+
+  const _setCountryData = (_data) => {
+    const MAX = 5;
+    var curr = 0;
+    var others = 0;
+    var _countryData = countryData;
+    for (let i in _data) {
+      if (curr == MAX || i == "unknown") {
+        others += _data[i];
+      } else {
+        _countryData = {
+          labels: [..._countryData.labels, i],
+          datasets: [
+            {
+              data: [..._countryData.datasets[0].data, _data[i]],
+              backgroundColor: [
+                ..._countryData.datasets[0].backgroundColor,
+                colors[_countryData.datasets[0].backgroundColor.length],
+              ],
+              hoverOffset: 4,
+            },
+          ],
+        };
+        curr++;
+      }
+    }
+    if (others > 0) {
+      _countryData = {
+        labels: [..._countryData.labels, "Others"],
+        datasets: [
+          {
+            data: [..._countryData.datasets[0].data, others],
+            backgroundColor: [
+              ..._countryData.datasets[0].backgroundColor,
+              colors[colors.length - 1],
+            ],
+            hoverOffset: 4,
+          },
+        ],
+      };
+    }
+    setCountryData(_countryData);
+  };
+
+  const getAccount = (__account) => {
+    return __account.substring(0, 8) + "...";
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  if (isLoading) return <>Loading</>;
 
   return (
     <div className="dash-outer-wrapper">
@@ -43,7 +163,7 @@ const Dashboard = () => {
                 <h3>Your txn amount</h3>
                 <div className="chart-wrapper">
                   <div className="chart-inner-wrapper">
-                    <Doughnut data={data} />
+                    <Doughnut data={tokenData} />
                   </div>
                   <div className="chart-span-wrapper">
                     <span>
@@ -55,10 +175,10 @@ const Dashboard = () => {
               </div>
               <hr />
               <div className="chart-block">
-                <h3>Your txn amount</h3>
+                <h3>Regions</h3>
                 <div className="chart-wrapper">
                   <div className="chart-inner-wrapper">
-                    <Pie data={data} />
+                    <Pie data={countryData} />
                   </div>
                   <div className="chart-span-wrapper">
                     <span>
@@ -71,9 +191,9 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="chart-block-2">
-                <h3>Your txns</h3>
+                <h3>Temporal Data</h3>
                 <div className="chart-wrapper-2">
-                  <Line data={lineData} />
+                  <Bar data={temporalData} />
                 </div>
               </div>
             </div>
@@ -83,202 +203,44 @@ const Dashboard = () => {
           <div className="right-inner-wrapper">
             <h4 style={{ fontWeight: "bold" }}>Your Donations</h4>
             <div className="txns-wrapper">
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
+              {txns.map((txn, index) => {
+                return (
+                  <div className="txn-wrapper" key={index}>
+                    <div className="flex-wrapper">
+                      <div className="txn-inner-wrapper">
+                        <span className="spann-wrapper">
+                          <span className="left-span">From</span>:{"  "}
+                          <span className="right-span">
+                            {getAccount(txn.sender)}
+                          </span>
+                        </span>
+                        <span className="spann-wrapper">
+                          <span className="left-span">Amount</span>:{"  "}
+                          <span className="right-span">
+                            {txn.amountReceived.$numberDecimal}
+                          </span>
+                        </span>
+                      </div>
+                      <div className="txn-inner-wrapper">
+                        <span className="spann-wrapper">
+                          <span className="left-span">Token</span>:{"  "}
+                          <span className="right-span"> ETH</span>
+                        </span>
+                        <span className="spann-wrapper">
+                          <span className="left-span">USD</span>:{" "}
+                          <span className="right-span">5$</span>
+                        </span>
+                      </div>
+                    </div>
                     <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
+                      <span className="left-span">Received</span>:{"  "}
+                      <span className="right-span">
+                        {new Date(txn.createdAt).toLocaleDateString()}
+                      </span>
                     </span>
                   </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
-              <div className="txn-wrapper">
-                <div className="flex-wrapper">
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">From</span>:{"  "}
-                      <span className="right-span"> 0xa3842x...</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Amount</span>:{"  "}
-                      <span className="right-span">0.005</span>
-                    </span>
-                  </div>
-                  <div className="txn-inner-wrapper">
-                    <span className="spann-wrapper">
-                      <span className="left-span">Token</span>:{"  "}
-                      <span className="right-span"> ETH</span>
-                    </span>
-                    <span className="spann-wrapper">
-                      <span className="left-span">USD</span>:{" "}
-                      <span className="right-span">5$</span>
-                    </span>
-                  </div>
-                </div>
-                <span className="spann-wrapper">
-                  <span className="left-span">Received</span>:{"  "}
-                  <span className="right-span"> 11:35 21 Sept. 2022</span>
-                </span>
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>

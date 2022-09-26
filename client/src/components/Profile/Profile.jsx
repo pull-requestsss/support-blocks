@@ -1,7 +1,9 @@
 import React from "react";
 import "./Profile.css";
+import { useNavigate } from "react-router-dom";
+const Profile = ({ userData }) => {
+  const navigate = useNavigate();
 
-const Profile = () => {
   return (
     <div className="container mt-15">
       <div className="row">
@@ -24,18 +26,16 @@ const Profile = () => {
                 <h4>{"You"}</h4>
                 <div className="h5 font-weight-300">
                   supportingblocks.club/
-                  <i className="ni location_pin mr-2">{"username"}</i>
+                  <i className="ni location_pin mr-2">{userData.slug}</i>
                 </div>
-                <div className="h5 mt-4">{"industry"}</div>
+                <div className="h5 mt-4">{userData.industry}</div>
                 <hr className="my-4" />
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse
-                  nobis laudantium temporibus quia commodi hic repudiandae fuga
-                  illo placeat quos! Magnam dolorem sunt expedita vitae!
-                </p>
+                <p>{userData.intro}</p>
               </div>
               <div className="edit-btn-wrapper">
-                <button className="main-btn">Edit your profile</button>
+                <button className="main-btn" onClick={() => navigate("/edit")}>
+                  Edit your profile
+                </button>
               </div>
             </div>
           </div>
