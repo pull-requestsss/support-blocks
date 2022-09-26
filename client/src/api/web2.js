@@ -14,6 +14,18 @@ export const getUserData = async (slug) => {
     })
 }
 
+export const getUserDataAccount = async (account) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/users?wallet=" + account;
+            const res = (await axios.get(url)).data;
+            resolve(res);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
 export const getRates = async () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -76,6 +88,30 @@ export const sendAnalytics = async (account) => {
         } catch (error) {
             console.log(error);
             resolve(error);
+        }
+    })
+}
+
+export const getAnalyticsData = async (JWT) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/analytics";
+            const res = await axios.get(url, { headers: { Authorization: JWT } });
+            resolve(res.data);
+        } catch (err) {
+            reject(err);
+        }
+    })
+}
+
+export const getTxnData = async (JWT) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const url = constants.baseURL + "/txns";
+            const res = await axios.get(url, { headers: { Authorization: JWT } });
+            resolve(res.data);
+        } catch (err) {
+            reject(err);
         }
     })
 }
