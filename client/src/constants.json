@@ -1,8 +1,8 @@
 {
     "baseURL" : "http://192.168.0.122:8080/api",
     "ETH" : "0x0000000000000000000000000000000000000000",
-    "WETH" : "0x3286513f435cDdf55f86f707c67835D7D16c4d71",
-    "USDT" : "0x8b118cCe785fa0f54C43b178717f2E12Aaab86eD",
+    "WETH" : "0x3286513f435cddf55f86f707c67835d7d16c4d71",
+    "USDT" : "0x8b118cce785fa0f54c43b178717f2e12aaab86ed",
     "ethLogo" : "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
     "wethLogo" : "https://openseauserdata.com/files/accae6b6fb3888cbff27a013729c22dc.svg",
     "daiLogo" : "https://assets.coingecko.com/coins/images/9956/large/4943.png?1636636734",

@@ -26,7 +26,6 @@ const SignUp = () => {
   const launchApp = async () => {
     var _jwt = JWT;
     var _isNewUser = localStorage.getItem("isNewUser");
-    console.log("JWT", _jwt);
     var _signer = signer;
     var _account = account;
     try {
@@ -103,7 +102,7 @@ const SignUp = () => {
               Lets get you <span style={{ color: "#f14836" }}>setup !</span>
             </h5>
 
-            <form id="contact-form">
+            <form id="contact-form" onSubmit={submitDetails}>
               <div className="row">
                 <div className="col-md-6">
                   <div className="contact-form mt-45">
@@ -116,6 +115,7 @@ const SignUp = () => {
                       name="name"
                       placeholder="0x883adf..."
                       value={account}
+                      required={true}
                       readOnly={true}
                     />
                   </div>
@@ -127,9 +127,9 @@ const SignUp = () => {
                     </label>
                     <input
                       type="text"
-                      name="email"
                       placeholder="supportingblocks.club/username"
                       value={data.slug}
+                      required={true}
                       onChange={(e) =>
                         setData({ ...data, slug: e.target.value })
                       }
@@ -138,12 +138,15 @@ const SignUp = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="contact-form mt-45">
-                    <label>Your Industry</label>
+                    <label>
+                      Your Industry <span style={{ color: "#f14836" }}>*</span>
+                    </label>
                     <input
                       type="text"
                       name="name"
                       placeholder="Trader, Gamer, Developer..."
                       value={data.industry}
+                      required={true}
                       onChange={(e) =>
                         setData({ ...data, industry: e.target.value })
                       }
@@ -152,12 +155,15 @@ const SignUp = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="contact-form mt-45">
-                    <label>Featured URL</label>
+                    <label>
+                      Featured URL <span style={{ color: "#f14836" }}>*</span>
+                    </label>
                     <input
                       type="text"
                       name="email"
                       placeholder="linkedin.com/..."
                       value={data.featuredUrl}
+                      required={true}
                       onChange={(e) =>
                         setData({ ...data, featuredUrl: e.target.value })
                       }
@@ -180,11 +186,7 @@ const SignUp = () => {
                 <p className="form-message"></p>
                 <div className="col-md-12">
                   <div className="contact-form mt-45">
-                    <button
-                      type="submit"
-                      className="main-btn"
-                      onClick={submitDetails}
-                    >
+                    <button type="submit" className="main-btn">
                       Sign Up
                     </button>
                   </div>

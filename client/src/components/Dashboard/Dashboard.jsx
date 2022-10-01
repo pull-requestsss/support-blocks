@@ -80,8 +80,8 @@ const Dashboard = ({ analData, txnData }) => {
     const temp = tokenData;
     const value = {
       "0x0000000000000000000000000000000000000000": 0,
-      "0x8b118cCe785fa0f54C43b178717f2E12Aaab86eD": 1,
-      "0x3286513f435cDdf55f86f707c67835D7D16c4d71": 2,
+      "0x8b118cce785fa0f54c43b178717f2e12aaab86ed": 1,
+      "0x3286513f435cddf55f86f707c67835d7d16c4d71": 2,
     };
     for (let i = 0; i < _data.length; i++) {
       var _temp = _data[i];

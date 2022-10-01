@@ -25,17 +25,12 @@ const Profile = ({ userData }) => {
               <div className="text-center">
                 <h4>{"You"}</h4>
                 <div className="h5 font-weight-300">
-                  supportingblocks.club/
+                  supportblocks.club/
                   <i className="ni location_pin mr-2">{userData.slug}</i>
                 </div>
                 <div className="h5 mt-4">{userData.industry}</div>
                 <hr className="my-4" />
                 <p>{userData.intro}</p>
-              </div>
-              <div className="edit-btn-wrapper">
-                <button className="main-btn" onClick={() => navigate("/edit")}>
-                  Edit your profile
-                </button>
               </div>
             </div>
           </div>

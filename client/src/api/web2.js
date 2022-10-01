@@ -21,6 +21,7 @@ export const getUserDataAccount = async (account) => {
             const res = (await axios.get(url)).data;
             resolve(res);
         } catch (error) {
+            console.log(error);
             reject(error);
         }
     })
@@ -71,7 +72,7 @@ export const users = async (payload, JWT) => {
 export const verifyJWT = (token, account) => {
     var decoded = jwt_decode(token);
     const time = Math.floor(Date.now() / 1000) + 1800;
-    var isValid = decoded.wallet == account;
+    var isValid = decoded.wallet.toLowerCase() == account.toLowerCase();
     isValid = isValid && !(decoded.exp <= time);
     return isValid;
 }
