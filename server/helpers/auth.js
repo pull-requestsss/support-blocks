@@ -15,7 +15,7 @@ const validateSignature = async (signature, message) => {
   const currentTime = Math.round(Date.now() / 1000);
   if (currentTime - message.createdAt > 60 * 60) {
     return false;
-  }
+  } 
 
   return signerAddress.toLowerCase() == message.owner.toLowerCase();
 };

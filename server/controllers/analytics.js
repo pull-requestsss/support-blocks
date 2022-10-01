@@ -29,7 +29,7 @@ const saveAnalytics = async (req, res) => {
   const parsedUpdate = JSON.parse(incrementUpdate);
   try {
     await UserTransactionsAnalytics.findOneAndUpdate(
-      { walletAddress: paidTo },
+      { walletAddress: paidTo.toLowerCase() },
       parsedUpdate,
       {
         upsert: true,
@@ -55,7 +55,7 @@ const getAnalytics = async (req, res) => {
   const walletAddress = res.locals.walletAddress;
 
   const data = await UserTransactionsAnalytics.findOne({
-    walletAddress: walletAddress,
+    receiver: walletAddress,
   });
   if (data == null) {
     const data = { countryData: { "unknown": 0 }, hourlyData: { 1: 0 } }
