@@ -30,18 +30,63 @@ const init = async () => {
     return { provider, accounts, signer };
 }
 
-export const connectWallet = async (provider, signer, account, dispatch) => {
-    if (provider == undefined) {
+export const connectWallet = async (_provider, _signer, _account, dispatch) => {
+    if (_provider == undefined) {
         const { provider, accounts, signer } = await init();
+        setNetwork(provider);
         dispatch(setSigner({ signer: signer }));
         dispatch(setProvider({ provider: provider }));
         dispatch(setAccount({ account: accounts[0] }));
         return { _provider: provider, _account: accounts[0], _signer: signer };
     }
-    return { _provider: provider, _account: account, _signer: signer };
+    return { _provider: _provider, _account: _account, _signer: _signer };
 
 }
 
+const setNetwork = (provider) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { chainId } = await provider.getNetwork()
+            if (chainId == 5)
+                resolve();
+            await switchNetwork(provider);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+const switchNetwork = async (provider) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log(provider);
+            await provider.send(
+                'wallet_switchEthereumChain',
+                [{ chainId: '0x5' }]
+            );
+            resolve("Chain switched");
+        } catch (e) {
+            console.log(e);
+            if (e.code === 4902) {
+                try {
+                    await provider.send('wallet_addEthereumChain',
+                        [{chainId: '0x5',
+                            chainName: 'Görli Testnet',
+                            rpcUrls: ['https://goerli.infura.io/v3/'],
+                        }],
+                    );
+                    resolve("Chain switched");
+                } catch (addError) {
+                    console.error(addError);
+                    reject("Chain could not be switched");
+                }
+            }
+            console.error(e);
+            reject("Chain could not be switched");
+        }
+    })
+}
 
 export const getSignature = async (signer, message) => {
     var messageDigest = solidityKeccak256(['string', 'uint256', 'address'], [message.message, message.createdAt, message.owner]);

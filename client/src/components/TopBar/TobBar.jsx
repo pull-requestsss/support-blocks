@@ -78,7 +78,7 @@ const TobBar = ({ donation, dash }) => {
                     fontSize: "1.5rem",
                   }}
                 >
-                  Supporting{" "}
+                  Support{" "}
                   <span style={{ color: "#f14836", fontWeight: "600" }}>
                     Blocks
                   </span>

@@ -28,7 +28,7 @@ const Footer = () => {
           <div className="cr">
             &copy; Copyright{" "}
             <strong>
-              <span>Supporting Blocks</span>
+              <span>Support Blocks</span>
             </strong>
             . All Rights Reserved
           </div>
