@@ -21,7 +21,7 @@ const authMiddleware = async (req, res, next) => {
   }
   try {
     const decodedJwt = jwt.verify(accessToken, process.env.JWT_SECRET);
-    res.locals.walletAddress = decodedJwt.wallet;
+    res.locals.walletAddress = decodedJwt.wallet.toLowerCase();
     next();
   } catch (err) {
     return res.status(401).send({ error: "could not validate accesstoken" });

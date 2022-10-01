@@ -2,7 +2,7 @@ const { Transactions } = require("../models/transactionsSchema");
 
 const getTransactions = async (req, res) => {
 	const walletAddress = res.locals.walletAddress;
-	var result = await Transactions.find({ walletAddress: walletAddress })
+	var result = await Transactions.find({ receiver: walletAddress })
 		.select(
 			["-_id", "-__v", "-updatedAt",]
 		)
@@ -18,4 +18,4 @@ const getTransactions = async (req, res) => {
 };
 
 
-module.exports = {getTransactions};
+module.exports = { getTransactions };

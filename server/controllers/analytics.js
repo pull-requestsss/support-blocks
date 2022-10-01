@@ -29,7 +29,7 @@ const saveAnalytics = async (req, res) => {
   const parsedUpdate = JSON.parse(incrementUpdate);
   try {
     await UserTransactionsAnalytics.findOneAndUpdate(
-      { walletAddress: paidTo },
+      { walletAddress: paidTo.toLowerCase() },
       parsedUpdate,
       {
         upsert: true,

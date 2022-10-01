@@ -67,7 +67,7 @@ const initUpdateUser = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   const queriedSlug = req.query.slug;
-  const queriedWallet = req.query.wallet;
+  const queriedWallet = (req.query.wallet).toLowerCase();
 
   if (queriedSlug == undefined && queriedWallet == undefined) {
     return res
