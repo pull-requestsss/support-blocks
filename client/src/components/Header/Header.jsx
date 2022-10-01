@@ -95,7 +95,7 @@ const Header = () => {
                   data-wow-duration="1s"
                   data-wow-delay="0.8s"
                 >
-                  <span>supportingblocks.club/</span>
+                  <span>supportblocks.club/</span>
                   <input
                     type="text"
                     placeholder="username"

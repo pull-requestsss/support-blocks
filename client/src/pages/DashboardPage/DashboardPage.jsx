@@ -39,7 +39,6 @@ const DashboardPage = () => {
   const launchApp = async () => {
     var _jwt = JWT;
     var _isNewUser = localStorage.getItem("isNewUser");
-    console.log("JWT", _jwt);
     var _signer = signer;
     var _account = account;
     try {
@@ -58,13 +57,16 @@ const DashboardPage = () => {
         _isNewUser = res.isNewUser;
       }
       localStorage.setItem("isNewUser", _isNewUser);
-      _isNewUser == true || _isNewUser == "true"
-        ? navigate("/setup")
-        : navigate("/dashboard");
+      if (_isNewUser == true || _isNewUser == "true") {
+        navigate("/setup");
+        return;
+      }
 
       const _analData = (await getAnalyticsData(_jwt)).data;
       const _txnData = await getTxnData(_jwt);
       const _userData = (await getUserDataAccount(_account)).user;
+
+      console.log(_txnData);
 
       setAnalData(_analData);
       setTxnData(_txnData);
