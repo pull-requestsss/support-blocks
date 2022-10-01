@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "chart.js/auto";
 import { Doughnut, Pie, Bar } from "react-chartjs-2";
 import "./Dashboard.css";
-import { getAnalyticsData, getTxnData } from "../../api/web2";
+import constants from "../../constants.json";
 
 const Dashboard = ({ analData, txnData }) => {
   const [countryData, setCountryData] = useState({
@@ -79,14 +79,13 @@ const Dashboard = ({ analData, txnData }) => {
   const _setTxnData = (_data) => {
     const temp = tokenData;
     const value = {
-      "0x1": 1,
-      "0x00": 2,
       "0x0000000000000000000000000000000000000000": 0,
+      "0x8b118cCe785fa0f54C43b178717f2E12Aaab86eD": 1,
+      "0x3286513f435cDdf55f86f707c67835D7D16c4d71": 2,
     };
     for (let i = 0; i < _data.length; i++) {
       var _temp = _data[i];
       var idx = value[_temp.token];
-
       temp.datasets[0].data[idx] += Number(_temp.amountReceived.$numberDecimal);
     }
     setTokenData(temp);
@@ -141,6 +140,12 @@ const Dashboard = ({ analData, txnData }) => {
       };
     }
     setCountryData(_countryData);
+  };
+
+  const getToken = (_token) => {
+    if (_token == constants.ETH) return "ETH";
+    if (_token == constants.WETH) return "WETH";
+    if (_token == constants.USDT) return "USDT";
   };
 
   const getAccount = (__account) => {
@@ -224,11 +229,9 @@ const Dashboard = ({ analData, txnData }) => {
                       <div className="txn-inner-wrapper">
                         <span className="spann-wrapper">
                           <span className="left-span">Token</span>:{"  "}
-                          <span className="right-span"> ETH</span>
-                        </span>
-                        <span className="spann-wrapper">
-                          <span className="left-span">USD</span>:{" "}
-                          <span className="right-span">5$</span>
+                          <span className="right-span">
+                            {getToken(txn.token)}
+                          </span>
                         </span>
                       </div>
                     </div>

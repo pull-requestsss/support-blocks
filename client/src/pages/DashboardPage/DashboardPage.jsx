@@ -66,10 +66,6 @@ const DashboardPage = () => {
       const _txnData = await getTxnData(_jwt);
       const _userData = (await getUserDataAccount(_account)).user;
 
-      console.log("analytics data ", _analData);
-
-      console.log("txn data ", _txnData);
-
       setAnalData(_analData);
       setTxnData(_txnData);
       setUserData(_userData);

@@ -6,7 +6,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useParams, useNavigate } from "react-router-dom";
 import { getRates, getUserData, sendAnalytics } from "../../api/web2";
-import { getContract, performTxn } from "../../api/web3";
+import { getApproval, getContract, performTxn } from "../../api/web3";
 import Modal from "react-bootstrap/Modal";
 import Loading from "../../components/Loading/Loading";
 
@@ -32,6 +32,8 @@ const DonationPage = () => {
   const [txn, setTxn] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [contract, setContract] = useState(undefined);
+  const [weth, setWeth] = useState(undefined);
+  const [usdt, setUsdt] = useState(undefined);
   const [isReady, setIsReady] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -88,14 +90,26 @@ const DonationPage = () => {
   const makeTransfer = async () => {
     try {
       var _contract = contract;
+      var _weth = weth;
+      var _usdt = usdt;
       if (contract == undefined) {
-        _contract = await getContract();
+        const res = await getContract();
+        _contract = res.contract;
+        _weth = res.weth;
+        _usdt = res.usdt;
         setContract(_contract);
+        setWeth(_weth);
+        setUsdt(_usdt);
       }
       if (token != constants.ETH) {
-        console.log(token);
-        // check permission
-        // take persmission
+        const _txn = await getApproval(
+          token == constants.USDT ? _usdt : _weth,
+          calculateAmount()
+        );
+        setTxn(_txn.hash);
+        handleShow();
+        const receipt = await _txn.wait();
+        handleClose();
       }
       const _txn = await performTxn(
         _contract,
@@ -217,9 +231,6 @@ const DonationPage = () => {
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => setToken(constants.WETH)}>
                     Wrapped Eth
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => setToken(constants.DAI)}>
-                    Dai Stable coin
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => setToken(constants.USDT)}>
                     Tether stable coin

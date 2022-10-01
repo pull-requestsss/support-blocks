@@ -35,7 +35,7 @@ describe("Proxy contract", async () => {
         let tree = new MerkleTree([ETH, ft1.address, ft2.address], keccak256, { hashLeaves: true, sortPairs: true });
         whitelistRoot = tree.getHexRoot();
         whitelistTree = tree;
-        const tempTree = new MerkleTree([ETH], keccak256, { hashLeaves: true, sortPairs: true });
+        const tempTree = new MerkleTree([ETH, "0x3286513f435cDdf55f86f707c67835D7D16c4d71", "0x8b118cCe785fa0f54C43b178717f2E12Aaab86eD"], keccak256, { hashLeaves: true, sortPairs: true });
         console.log("Root", tempTree.getHexRoot());
     }
 
