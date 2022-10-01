@@ -55,7 +55,7 @@ const getAnalytics = async (req, res) => {
   const walletAddress = res.locals.walletAddress;
 
   const data = await UserTransactionsAnalytics.findOne({
-    receiver: walletAddress,
+    walletAddress: walletAddress,
   });
   if (data == null) {
     const data = { countryData: { "unknown": 0 }, hourlyData: { 1: 0 } }
