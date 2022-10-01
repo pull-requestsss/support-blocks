@@ -1,5 +1,7 @@
 import React from "react";
 import "./Team.css";
+import dp1 from "../../assets/Team1.png";
+import dp2 from "../../assets/Team2.jpeg";
 
 const Team = () => {
   return (
@@ -26,14 +28,12 @@ const Team = () => {
               data-wow-delay="0.7s"
             >
               <div className="blog-image">
-                <a href="blog-details.html">
-                  <img src="assets/images/news-2.jpg" alt="news" />
-                </a>
+                <img src={dp1} alt="news" />
               </div>
               <div className="blog-content">
                 <div className="blog-author d-flex align-items-center">
                   <div className="author-content media-body">
-                    <p className="text">Elon Musk</p>
+                    <p className="text">Priyam Anand</p>
                   </div>
                 </div>
               </div>
@@ -46,14 +46,12 @@ const Team = () => {
               data-wow-delay="0.7s"
             >
               <div className="blog-image">
-                <a href="blog-details.html">
-                  <img src="assets/images/news-2.jpg" alt="news" />
-                </a>
+                <img src={dp2} alt="news" />
               </div>
               <div className="blog-content">
                 <div className="blog-author d-flex align-items-center">
                   <div className="author-content media-body">
-                    <p className="text">Elon Musk</p>
+                    <p className="text">Raghavendra Khare</p>
                   </div>
                 </div>
               </div>
