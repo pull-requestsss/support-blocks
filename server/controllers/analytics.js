@@ -41,9 +41,9 @@ const saveAnalytics = async (req, res) => {
   } catch (e) {
     console.log(
       "failed to save analytics for txn. Wallet Address :" +
-        paidTo +
-        "with exception : " +
-        e
+      paidTo +
+      "with exception : " +
+      e
     );
   }
   return res
@@ -58,9 +58,8 @@ const getAnalytics = async (req, res) => {
     walletAddress: walletAddress,
   });
   if (data == null) {
-    return res.status(404).send({
-      message: `no analytics found for user with walletAddress : ${walletAddress}`,
-    });
+    const data = { countryData: { "unknown": 0 }, hourlyData: { 1: 0 } }
+    return res.status(200).send({ data: data });
   }
 
   var countryData = {};
