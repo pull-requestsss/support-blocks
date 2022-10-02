@@ -15,6 +15,7 @@ const Dashboard = ({ analData, txnData }) => {
       },
     ],
   });
+  const [isEmpty, setIsEmpty] = useState(true);
   const [temporalData, setTemporalData] = useState({
     labels: [
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
@@ -87,6 +88,7 @@ const Dashboard = ({ analData, txnData }) => {
       var _temp = _data[i];
       var idx = value[_temp.token];
       temp.datasets[0].data[idx] += Number(_temp.amountReceived.$numberDecimal);
+      setIsEmpty(false);
     }
     setTokenData(temp);
   };
@@ -164,35 +166,57 @@ const Dashboard = ({ analData, txnData }) => {
         <div className="dash-left-section col-lg-8">
           <div className="left-outer-wrapper">
             <div className="left-inner-wrapper">
-              <div className="chart-block" style={{ marginTop: "2rem" }}>
+              <div className="chart-block">
                 <h3>Your txn amount</h3>
                 <div className="chart-wrapper">
-                  <div className="chart-inner-wrapper">
-                    <Doughnut data={tokenData} />
-                  </div>
-                  <div className="chart-span-wrapper">
-                    <span>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Tenetur soluta consequuntur illum. Adipisci, excepturi ad?
+                  {isEmpty ? (
+                    <span className="empty-span">
+                      Your Donation Amount will be displayed here
                     </span>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="chart-inner-wrapper">
+                        <Doughnut data={tokenData} />
+                      </div>
+                      <div className="chart-span-wrapper">
+                        {tokenData.labels.map((lbl, idx) => {
+                          return (
+                            <div>
+                              {lbl} : {tokenData.datasets[0].data[idx]}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <hr />
               <div className="chart-block">
                 <h3>Regions</h3>
                 <div className="chart-wrapper">
-                  <div className="chart-inner-wrapper">
-                    <Pie data={countryData} />
-                  </div>
-                  <div className="chart-span-wrapper">
-                    <span>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Explicabo, perferendis accusamus ex incidunt sit sequi
-                      recusandae, voluptates, labore possimus expedita beatae
-                      veniam tempore quas quod.
+                  {isEmpty ? (
+                    <span className="empty-span">
+                      Region of donation will be displayed here
                     </span>
-                  </div>
+                  ) : (
+                    <>
+                      <div className="chart-inner-wrapper">
+                        <Pie data={countryData} />
+                      </div>
+                      <div className="chart-span-wrapper">
+                        <span>
+                          {countryData.labels.map((lbl, idx) => {
+                            return (
+                              <div>
+                                {lbl} : {countryData.datasets[0].data[idx]}
+                              </div>
+                            );
+                          })}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               <div className="chart-block-2">
@@ -208,42 +232,48 @@ const Dashboard = ({ analData, txnData }) => {
           <div className="right-inner-wrapper">
             <h4 style={{ fontWeight: "bold" }}>Your Donations</h4>
             <div className="txns-wrapper">
-              {txns.map((txn, index) => {
-                return (
-                  <div className="txn-wrapper" key={index}>
-                    <div className="flex-wrapper">
-                      <div className="txn-inner-wrapper">
-                        <span className="spann-wrapper">
-                          <span className="left-span">From</span>:{"  "}
-                          <span className="right-span">
-                            {getAccount(txn.sender)}
+              {isEmpty ? (
+                <span className="empty-span">
+                  Your Donations will be displayed here
+                </span>
+              ) : (
+                txns.map((txn, index) => {
+                  return (
+                    <div className="txn-wrapper" key={index}>
+                      <div className="flex-wrapper">
+                        <div className="txn-inner-wrapper">
+                          <span className="spann-wrapper">
+                            <span className="left-span">From</span>:{"  "}
+                            <span className="right-span">
+                              {getAccount(txn.sender)}
+                            </span>
                           </span>
-                        </span>
-                        <span className="spann-wrapper">
-                          <span className="left-span">Amount</span>:{"  "}
-                          <span className="right-span">
-                            {txn.amountReceived.$numberDecimal}
+                          <span className="spann-wrapper">
+                            <span className="left-span">Amount</span>:{"  "}
+                            <span className="right-span">
+                              {txn.amountReceived.$numberDecimal}
+                            </span>
                           </span>
-                        </span>
+                        </div>
+                        <div className="txn-inner-wrapper">
+                          <span className="spann-wrapper">
+                            <span className="left-span">Token</span>:{"  "}
+                            <span className="right-span">
+                              {getToken(txn.token)}
+                            </span>
+                          </span>
+                        </div>
                       </div>
-                      <div className="txn-inner-wrapper">
-                        <span className="spann-wrapper">
-                          <span className="left-span">Token</span>:{"  "}
-                          <span className="right-span">
-                            {getToken(txn.token)}
-                          </span>
+                      <span className="spann-wrapper">
+                        <span className="left-span">Received</span>:{"  "}
+                        <span className="right-span">
+                          {new Date(txn.createdAt).toLocaleDateString()}
                         </span>
-                      </div>
-                    </div>
-                    <span className="spann-wrapper">
-                      <span className="left-span">Received</span>:{"  "}
-                      <span className="right-span">
-                        {new Date(txn.createdAt).toLocaleDateString()}
                       </span>
-                    </span>
-                  </div>
-                );
-              })}
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

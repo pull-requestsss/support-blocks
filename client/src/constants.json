@@ -1,5 +1,5 @@
 {
-    "baseURL" : "http://192.168.0.122:8080/api",
+    "baseURL" : "https://supblockseth.herokuapp.com/api",
     "ETH" : "0x0000000000000000000000000000000000000000",
     "WETH" : "0x3286513f435cddf55f86f707c67835d7d16c4d71",
     "USDT" : "0x8b118cce785fa0f54c43b178717f2e12aaab86ed",

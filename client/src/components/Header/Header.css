@@ -107,7 +107,7 @@
 .header-hero-content .header-singup {
   position: relative;
   margin-top: 120px;
-  z-index: 9;
+  /* z-index: 9; */
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .header-hero-content .header-singup {
