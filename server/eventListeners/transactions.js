@@ -171,9 +171,9 @@ const listenForTransactions = async () => {
     async (from, to, token, totalAmount, amountReceived) => {
       try {
         await Transactions.insertMany({
-          sender: from,
-          receiver: to,
-          token: token,
+          sender: from.toLowerCase(),
+          receiver: to.toLowerCase(),
+          token: token.toLowerCase(),
           totalAmount: ethers.utils.formatEther(totalAmount),
           amountReceived: ethers.utils.formatEther(amountReceived),
         });

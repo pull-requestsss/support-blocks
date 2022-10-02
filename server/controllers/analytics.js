@@ -29,7 +29,7 @@ const saveAnalytics = async (req, res) => {
   const parsedUpdate = JSON.parse(incrementUpdate);
   try {
     await UserTransactionsAnalytics.findOneAndUpdate(
-      { walletAddress: paidTo },
+      { walletAddress: paidTo.toLowerCase() },
       parsedUpdate,
       {
         upsert: true,
@@ -41,9 +41,9 @@ const saveAnalytics = async (req, res) => {
   } catch (e) {
     console.log(
       "failed to save analytics for txn. Wallet Address :" +
-        paidTo +
-        "with exception : " +
-        e
+      paidTo +
+      "with exception : " +
+      e
     );
   }
   return res
@@ -54,13 +54,12 @@ const saveAnalytics = async (req, res) => {
 const getAnalytics = async (req, res) => {
   const walletAddress = res.locals.walletAddress;
 
-  const analyticData = UserTransactionsAnalytics.findOne({
+  const data = await UserTransactionsAnalytics.findOne({
     walletAddress: walletAddress,
   });
-  if (analyticData == null) {
-    return res.status(404).send({
-      message: `no analytics found for user with walletAddress : ${walletAddress}`,
-    });
+  if (data == null) {
+    const data = { countryData: { "unknown": 0 }, hourlyData: { 1: 0 } }
+    return res.status(200).send({ data: data });
   }
 
   var countryData = {};

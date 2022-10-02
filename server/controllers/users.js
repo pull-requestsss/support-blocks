@@ -77,7 +77,7 @@ const getUserDetails = async (req, res) => {
 
   if (queriedWallet != undefined) {
     const foundUser = await User.findOne({
-      walletAddress: queriedWallet,
+      walletAddress: queriedWallet.toLowerCase(),
     }).select(["-_id", "-__v", "-createdAt", "-updatedAt"]);
     if (foundUser) {
       return res.status(200).send({ user: foundUser });
