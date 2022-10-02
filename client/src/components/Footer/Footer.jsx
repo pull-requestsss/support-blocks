@@ -8,21 +8,11 @@ const Footer = () => {
         <div className="copy-right">
           <div className="icons-container">
             <a
-              href="https://github.com/priyam-anand/D-Med"
+              href="https://github.com/pull-requestsss/support-blocks"
               target="_blank"
               rel="noreferrer"
             >
               <Icon icon="akar-icons:github-fill" color="#000000" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/priyam27/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Icon icon="bi:linkedin" color="#1977cc" />
-            </a>
-            <a href="https://discord.com/" target="_parent">
-              <Icon icon="akar-icons:discord-fill" color="#455383" />
             </a>
           </div>
           <div className="cr">
