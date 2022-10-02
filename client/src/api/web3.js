@@ -62,7 +62,6 @@ const setNetwork = (provider) => {
 const switchNetwork = async (provider) => {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log(provider);
             await provider.send(
                 'wallet_switchEthereumChain',
                 [{ chainId: '0x5' }]

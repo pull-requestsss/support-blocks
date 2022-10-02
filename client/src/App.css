@@ -109,7 +109,7 @@ p {
   border-radius: 50px;
   color: #fff;
   cursor: pointer;
-  z-index: 5;
+  /* z-index: 5; */
   -webkit-transition: all 0.4s ease-out 0s;
   -moz-transition: all 0.4s ease-out 0s;
   -ms-transition: all 0.4s ease-out 0s;

@@ -168,7 +168,7 @@ const DonationPage = () => {
                 <div className="text-center">
                   <h4>{getAddress(userData.walletAddress)}</h4>
                   <div className="h5 font-weight-300">
-                    supportingblocks.club/
+                    supportblocks.club/
                     <i className="ni location_pin mr-2">{userData.slug}</i>
                   </div>
                   <div className="h5 mt-4">{userData.industry}</div>

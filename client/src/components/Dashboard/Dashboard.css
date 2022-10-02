@@ -18,6 +18,11 @@
   flex-direction: column;
 }
 
+.chart-block {
+  margin-top: 2rem;
+  width: 90%;
+}
+
 .chart-block-2 {
   width: 85%;
 }
@@ -30,9 +35,6 @@
 .chart-wrapper {
   padding: 2rem;
   margin: 1rem;
-  /* border: 1px solid black; */
-  /* height: 90%;
-  width: 75%; */
   display: flex;
 }
 
@@ -50,6 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   padding: 0.75rem;
 }
 
@@ -100,4 +103,9 @@
 .right-span {
   color: gray;
   margin-left: 0.25rem;
+}
+
+.empty-span {
+  width: 100%;
+  text-align: center;
 }
